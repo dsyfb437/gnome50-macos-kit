@@ -1,0 +1,74 @@
+--- gtk-Light.css.original
++++ gtk-Light.css.fixed
+@@ -1491,7 +1491,7 @@
+   background-color: #2E7CF7;
+   background-image: none;
+   box-shadow: none;
+-  border-color: color-mix(in srgb, black 6% #2E7CF7);
++  border-color: color-mix(in srgb, black 6%, #2E7CF7);
+ }
+ 
+ 
+@@ -1510,7 +1510,7 @@
+   background-color: #478bf8;
+   background-image: none;
+   box-shadow: none;
+-  border-color: color-mix(in srgb, black 6% #478bf8);
++  border-color: color-mix(in srgb, black 6%, #478bf8);
+ }
+ 
+ 
+@@ -1521,7 +1521,7 @@
+   background-color: #156df6;
+   background-image: none;
+   box-shadow: none;
+-  border-color: color-mix(in srgb, black 6% #156df6);
++  border-color: color-mix(in srgb, black 6%, #156df6);
+   box-shadow: none;
+ }
+ 
+@@ -1554,7 +1554,7 @@
+   background-color: #ED5F5D;
+   background-image: none;
+   box-shadow: none;
+-  border-color: color-mix(in srgb, black 6% #ED5F5D);
++  border-color: color-mix(in srgb, black 6%, #ED5F5D);
+ }
+ 
+ 
+@@ -1573,7 +1573,7 @@
+   background-color: #f07674;
+   background-image: none;
+   box-shadow: none;
+-  border-color: color-mix(in srgb, black 6% #f07674);
++  border-color: color-mix(in srgb, black 6%, #f07674);
+ }
+ 
+ 
+@@ -1584,7 +1584,7 @@
+   background-color: #ea4846;
+   background-image: none;
+   box-shadow: none;
+-  border-color: color-mix(in srgb, black 6% #ea4846);
++  border-color: color-mix(in srgb, black 6%, #ea4846);
+   box-shadow: none;
+ }
+ 
+@@ -1991,7 +1991,7 @@
+   background-color: @accent_bg_color;
+   background-image: none;
+   box-shadow: none;
+-  border-color: color-mix(in srgb, black 6% @accent_bg_color);
++  border-color: color-mix(in srgb, black 6%, @accent_bg_color);
+ }
+ 
+ popover.menu box.circular-buttons button.destructive-action.circular.image-button.model,
+@@ -2001,7 +2001,7 @@
+   background-color: #ED5F5D;
+   background-image: none;
+   box-shadow: none;
+-  border-color: color-mix(in srgb, black 6% #ED5F5D);
++  border-color: color-mix(in srgb, black 6%, #ED5F5D);
+ }
+ 
+ 
