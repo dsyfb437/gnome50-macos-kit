@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+backups/
+private/
+local-status*.json
+local-lock*.json

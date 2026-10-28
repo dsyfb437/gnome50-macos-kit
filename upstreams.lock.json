@@ -1,0 +1,136 @@
+[
+  {
+    "repository": "TPCT/tpct-mac-theme",
+    "url": "https://github.com/TPCT/tpct-mac-theme",
+    "commit": "4407330a30f9dcb6e5538553e57bdf48518e6892",
+    "latest_commit_utc": "2026-10-20T10:46:04Z",
+    "commit_message": "T-007: Flat TreeView headers and macOS segmented view switcher\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "pushed_utc": "2026-10-20T10:46:05Z",
+    "archived": false,
+    "stars_at_check": 1,
+    "checked_utc": "2026-10-28T07:17:49.460619+00:00",
+    "latest_release": {
+      "tag_name": null,
+      "published_at": null,
+      "html_url": null
+    },
+    "source_method": "GitHub commit tarball (git clone failed)",
+    "files": {
+      "README.md": "7c6c4b47150e5bae815b48707b98470e20434fda48295edf81a8539d307a4ccc",
+      "install.sh": "a1ebefaa7db49f484d320da416aefc81c406cec2bcf23968de534f9ced3257d5",
+      "extension/tpct-mac-shell@tpct/metadata.json": "6d33f62022e37b22694794018fd1a5ecc9affae259a30dd91dc2a8311335a9cd"
+    }
+  },
+  {
+    "repository": "BushidoCyb3r/MacOS-ify",
+    "url": "https://github.com/BushidoCyb3r/MacOS-ify",
+    "commit": "9b813c0b2ccadc0b504814183c1e28f454a77b4e",
+    "latest_commit_utc": "2026-06-13T17:09:21Z",
+    "commit_message": "Add embedded GTK graphical installer and expand install options\n\nAdd a --gui mode that extracts and runs an embedded GTK3 front-end\n(macos-ify-gui.py) kept in sync with the script via a heredoc payload.\nAdd --no-reboot, optional-package handling, and install routines for\nfonts, QuickLook, and keyboard layout. Update README to document the\ngraphical installer.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
+    "pushed_utc": "2026-06-13T17:09:22Z",
+    "archived": false,
+    "stars_at_check": 3,
+    "checked_utc": "2026-10-28T07:17:49.461185+00:00",
+    "latest_release": {
+      "tag_name": null,
+      "published_at": null,
+      "html_url": null
+    },
+    "source_method": "shallow git clone",
+    "files": {
+      "README.md": "90e362683492288d86fd55ad978dad7f9122fea48c9b1ad9f3b67a7d46df3160",
+      "macos-ify.sh": "b9ddd8193886c9c54504294c2bab5a6e6ce474a81fff82d98f63eda58688dbee"
+    }
+  },
+  {
+    "repository": "edwardgushchin/gnome-macos-dock",
+    "url": "https://github.com/edwardgushchin/gnome-macos-dock",
+    "commit": "4b537fb7f76a3409dd3e35925545ae3cfc5848b8",
+    "latest_commit_utc": "2026-08-25T23:03:49Z",
+    "commit_message": "fix: refine Codex icon geometry",
+    "pushed_utc": "2026-08-25T23:03:51Z",
+    "archived": false,
+    "stars_at_check": 1,
+    "checked_utc": "2026-10-28T07:17:49.461547+00:00",
+    "latest_release": {
+      "tag_name": "v1.0.0",
+      "published_at": "2026-08-25T21:41:32Z",
+      "html_url": "https://github.com/edwardgushchin/gnome-macos-dock/releases/tag/v1.0.0"
+    },
+    "source_method": "shallow git clone",
+    "files": {
+      "README.md": "4bbb4d455076c22a51a43c75fe284b49b8751184c59a05937076434276a749c9",
+      "install.sh": "b6fe03900c68b7edc649ea7761658bf5044c68eb5e31601faf36bfa345f8e062",
+      "restore.sh": "6fa5dca6650281023bd4e48b1e2084346673193378fac75f115ffcff243426bd",
+      "status.sh": "0cb4268b1c25400a7f424c92f5b2ac34966bc22513b78c50232b3e60c6b46a96",
+      "config/versions.env": "947d736b7aa6234eba043a67452078ddb08c4ce2fa7361e5f39de8f0d76f5c4a"
+    }
+  },
+  {
+    "repository": "ebalderasr/Cider-Shell",
+    "url": "https://github.com/ebalderasr/Cider-Shell",
+    "commit": "4f95d087bc6e6f809b9d42f5a6298848987f4dad",
+    "latest_commit_utc": "2026-06-13T04:36:26Z",
+    "commit_message": "refactor: extract shared helpers to lib.sh, switch to Inter font, add macOS shortcuts\n\n- Move set_if_key_exists, enable_shell_extension, configure_gnome_terminal\n  and configure_ptyxis into scripts/lib.sh to eliminate duplication\n- Switch UI/titlebar font from Noto Sans to Inter (fonts-inter package)\n- Add Super+Tab app switcher and Super+Space search shortcuts\n- Hide Just Perfection accessibility menu, power icon and startup status\n- Slightly increase blur brightness (0.6→0.7) and add overview blur\n- Document all Cider-Shell shortcuts in visual-finishing.md (EN + ES)\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>",
+    "pushed_utc": "2026-06-13T04:37:20Z",
+    "archived": false,
+    "stars_at_check": 0,
+    "checked_utc": "2026-10-28T07:17:49.461901+00:00",
+    "latest_release": {
+      "tag_name": null,
+      "published_at": null,
+      "html_url": null
+    },
+    "source_method": "shallow git clone",
+    "files": {
+      "README.md": "8dbe049f2b01abe06d588b3744de9336db3a2a4f2f2760562ed0846770037e9a",
+      "scripts/install.sh": "00ede6d83abb03924c9236db26589f3c7834dca846dff5fc4f08fdbc6e39d413",
+      "scripts/uninstall.sh": "db6f7be85c51884271195502e428223197dc422abde7a4dc941adfe736b610fc",
+      "scripts/check.sh": "78108f7cbc23c77c56c6eb85041b7520db2105cfa5ff34d404c9b17f61e744c0"
+    }
+  },
+  {
+    "repository": "vinceliuice/WhiteSur-gtk-theme",
+    "url": "https://github.com/vinceliuice/WhiteSur-gtk-theme",
+    "commit": "d5782652d412137e26fb8ff55b55a5572e4c6995",
+    "latest_commit_utc": "2026-09-11T08:07:05Z",
+    "commit_message": "Merge pull request #1433 from zzxxchen/master\n\nfix(gtk4): improve Hosty headerbar layout",
+    "pushed_utc": "2026-09-11T08:07:05Z",
+    "archived": false,
+    "stars_at_check": 9392,
+    "checked_utc": "2026-10-28T07:17:49.462149+00:00",
+    "latest_release": {
+      "tag_name": "2026-09-10",
+      "published_at": "2026-09-10T09:02:02Z",
+      "html_url": "https://github.com/vinceliuice/WhiteSur-gtk-theme/releases/tag/2026-09-10"
+    },
+    "source_method": "shallow git clone",
+    "files": {
+      "README.md": "1754731f22ede2a80b38f5efb5b97d1f41ff4026408ae5ad7cca57bb0a86c81d",
+      "install.sh": "8781fa09a0f2b6a72fb53c19c6600cbf967f669bbf83672e4d38f0b01961187c",
+      "libs/lib-install.sh": "77a2aef1fd0056b53e69d36baecf28cb4dbc95904258ef6d570d5acec0da6213",
+      "libs/lib-core.sh": "a55edcffbd1da27391784196ded4c496d2620ab6beafee296d9261f208620d3b"
+    }
+  },
+  {
+    "repository": "Unmade760/orbit-global-menu",
+    "url": "https://github.com/Unmade760/orbit-global-menu",
+    "commit": "aa5a9934edf5ee88c651d76a80ecbf936b9500a0",
+    "latest_commit_utc": "2026-10-23T05:25:39Z",
+    "commit_message": "Offer Unmaximize for a window maximized on one axis on GNOME 48\n\nA window tiled to half the screen is maximized vertically. The shell's\nwindow menu on 48 offers Restore for it, but the Window menu here\noffered Maximize. Release 1.1.3.",
+    "pushed_utc": "2026-10-23T05:25:43Z",
+    "archived": false,
+    "stars_at_check": 93,
+    "checked_utc": "2026-10-28T07:17:49.462480+00:00",
+    "latest_release": {
+      "tag_name": null,
+      "published_at": null,
+      "html_url": null
+    },
+    "source_method": "shallow git clone",
+    "files": {
+      "README.md": "2028719c345284da21d74986fa7f7f8be94be0a65102104564eba5642e50dcf9",
+      "global-menu@unmade.space/metadata.json": "5bed82d11cffeb50e00854c5b1a9ab23f2a2ffc5cf6fa3d6b5b4ba4bd3f9e791"
+    }
+  }
+]
