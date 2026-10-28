@@ -1,6 +1,8 @@
 # Ubuntu 26.04.1 / GNOME 50.1 macOS 风格整合包
 
-**本轮补齐：** [补齐记录](docs/补齐记录.md)：传统 GTK3 菜单兼容入口已补齐并完成真实动作回传测试，Rime 已加入可选组；Spotlight 补丁已备份应用到文件，保持启用，等待下次登录加载与验证。
+**新会话实测：** [新会话复验](docs/新会话复验.md)：Spotlight 补丁已加载并保持开启，5 轮概览开关 10/10 成功、searchController 警告 0 条；两类 GTK3 全局菜单动作回传再次通过。搜索输入与结果选择仍需实际交互验收。
+
+**此前补齐：** [补齐记录](docs/补齐记录.md)：传统 GTK3 菜单兼容入口已补齐并完成真实动作回传测试，Rime 已加入可选组；Spotlight 补丁已备份应用到文件，保持启用；现已完成新会话概览验证。
 
 **最新：** 用户已要求应用明确修复；[已应用修复记录](docs/已应用修复.md)优先于下方历史状态。Spotlight 已恢复启用，GTK4 8 处语法错误已修复，Orbit 用户级 daemon 已补齐且真实菜单动作回传测试通过。
 
@@ -8,7 +10,7 @@
 
 本方案以用户已经使用的 WhiteSur Light、Dhruva、Orbit、Inter 和 GNOME 原生手势为基线。借鉴整合项目的模块化、固定提交、状态检查、备份与恢复方式，不把六套桌面安装器拼接执行。
 
-**第二阶段已连接实际 GNOME 会话并完成概览对照测试。** [最新实际验证报告](docs/实际桌面验证.md)记录了 Spotlight 停用前后 291→0 条警告、当前 GTK4 样式 8 处错误、Orbit 缺少 daemon 和实际输入法状态。仅将 Spotlight 按用户指定基线停用；主题、输入法和其他扩展未改动。下文隔离测试与初始验收单保留作复用资料，不能当作全部视觉项目已经验收通过。
+历史诊断见 [实际桌面验证](docs/实际桌面验证.md)，其中停用 Spotlight、GTK4 错误及缺少 Orbit daemon 均为修复前状态。当前状态以顶部的新会话复验和修复记录为准。下方验收单仍包含未完成的视觉与交互项目。
 
 ## 先阅读
 
@@ -27,7 +29,7 @@
 | 顶栏 | Just Perfection 保留当前值；Blur My Shell 顶栏开、overview 关；Orbit 作为唯一全局菜单 |
 | 标题与锁屏 | Window Title Pro 与 Orbit 的标题显示做人工去重；WACK Sonoma 保留当前 cupertino 配置 |
 | 输入与辅助 | Clipboard Indicator、Kimpanel、Sushi、Fcitx5 + Rime 保留 |
-| 搜索 | Spotlight 扩展维持禁用；优先 GNOME 原生应用搜索，暂不新增概览扩展 |
+| 搜索 | Spotlight 保持开启并使用生命周期补丁；不增加另一套搜索扩展 |
 | 显示 | 166% 缩放保留；不自动修改 monitors.xml、Mutter 缩放功能或文本缩放 |
 
 严格排除：电源、合盖、休眠、充电阈值、GDM、Plymouth、引导器、分区、Windows 快速启动及任何双系统启动设置。无 sudo，无包管理器调用，无重启/注销命令，无关闭扩展版本校验的路径。
@@ -93,7 +95,7 @@ appearance 不会安装主题、改写 GTK4 文件或把所有应用都变成浅
 | orbit-files | 用户 global-menu 自定义菜单 |
 | menu-runtime | 本包新增的用户级 Orbit daemon、GTK3 模块及两个启动入口；恢复前需停用 Orbit，让 daemon 停止 |
 
-`all` 备份会将 shell-theme / panel-blur 并入 extension-settings，避免重复恢复同一路径。扩展设置恢复会精确替换该参数子树，但不恢复 `/org/gnome/shell/enabled-extensions`，不会重新启用 Spotlight。恢复前仍应先预览；这不是跨版本配置迁移器。
+`all` 备份会将 shell-theme / panel-blur 并入 extension-settings，避免重复恢复同一路径。扩展设置恢复会精确替换该参数子树，但不恢复 `/org/gnome/shell/enabled-extensions`，不会改变 Spotlight 等扩展的启用状态。恢复前仍应先预览；这不是跨版本配置迁移器。
 
 ```bash
 # 将 /绝对路径/备份 替换为 backup 命令返回的具体目录
@@ -114,7 +116,7 @@ python3 desktop.py restore --from /绝对路径/备份 --module extension-settin
 dbus-run-session -- python3 desktop.py restore --from /绝对路径/备份 --module extension-files --execute
 ```
 
-这只恢复源码。重新登录后先核对扩展元数据是否包含 50、Dhruva 补丁哈希，再人工逐个启用已验证的扩展；Spotlight 仍保持禁用。不要启用 Dash to Dock、TPCT Shell 或另一个全局菜单来“补齐”此包。
+这只恢复源码。重新登录后先核对扩展元数据是否包含 50、Dhruva 补丁哈希，再人工逐个启用已验证的扩展；Spotlight 按用户选择保留启用状态；若恢复了旧源码，需重新核验补丁。不要启用 Dash to Dock、TPCT Shell 或另一个全局菜单来“补齐”此包。
 
 恢复会拒绝不同 GNOME 主版本、不同 HOME 路径的备份。XDG 路径变化、新机器迁移、系统级扩展修改、任意目录的 Rime 词库、字体/主题外链目标，需要人工审阅后迁移。备份时关闭词库编辑器和扩展编辑操作；检测到文件在备份期间变化会退出。多文件/多键操作并非断电原子事务，备份应另存到外部存储。
 
@@ -138,7 +140,7 @@ python3 sources.py --repo Unmade760/orbit-global-menu --dest /绝对路径/新�
 
 主题一致性采用同一 WhiteSur 色系、Inter、现有光标和图标。GTK3、GTK4/libadwaita、Shell 是不同层，不能只设一个 gsettings 就声称统一。保留现有 GTK4 覆盖；后续按应用逐个验收浅色、深色、弹窗与标题栏。暂不为 Flatpak 批量开放主题目录或给所有应用设置 GTK_THEME。
 
-启动器先用原生应用搜索；Ulauncher 仅作为未来可选的独立应用候选，需要先检查 Ubuntu 26.04 包、Wayland 全局快捷键和 Fcitx5/Rime 键位。本包不安装 Ulauncher、不绑定 Super+Space，也不启用 Spotlight。TPCT 的 Ulauncher 外观可以参考，但其热键安装代码不直接复用。
+当前保留 Spotlight；Ulauncher 仅作为未来可选的独立应用候选，需要先检查 Ubuntu 26.04 包、Wayland 全局快捷键和 Fcitx5/Rime 键位。本包不安装 Ulauncher、不绑定 Super+Space，也不自动切换 Spotlight 的启用状态。TPCT 的 Ulauncher 外观可以参考，但其热键安装代码不直接复用。
 
 Just Perfection 的 32 / 16 / 间距 4、Sonoma cupertino 等既有值通过扩展参数备份保留，不猜测其跨版本键值含义。第三方设置界面的“4”不一定对应原始存储值 4。
 
