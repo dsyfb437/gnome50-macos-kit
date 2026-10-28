@@ -44,6 +44,8 @@ FILES = {
  'extension-files': [DATA / 'gnome-shell/extensions'],
  'input-method': [CONFIG / 'fcitx5', DATA / 'fcitx5', DATA / 'fcitx5/rime'],
  'orbit-files': [CONFIG / 'global-menu'],
+ 'menu-runtime': [DATA / 'gnome50-macos-kit/orbit-daemon', DATA / 'gnome50-macos-kit/gtk3-appmenu',
+                  HOME / '.local/bin/global-menu', HOME / '.local/bin/with-orbit-menu'],
 }
 # Avoid nested snapshots.
 FILES['input-method'] = [CONFIG / 'fcitx5', DATA / 'fcitx5']
@@ -284,6 +286,12 @@ def restore_data(source, b, modules):
 
 
 def offline_guard(modules):
+    if 'menu-runtime' in modules:
+        owner = run('gdbus', 'call', '--session', '--dest', 'org.freedesktop.DBus',
+                    '--object-path', '/org/freedesktop/DBus', '--method',
+                    'org.freedesktop.DBus.NameHasOwner', 'space.unmade.GlobalMenu', optional=True)
+        if owner == '(true,)':
+            raise RuntimeError('Stop the Orbit daemon before restoring menu-runtime; disable Orbit temporarily')
     if 'extension-files' in modules and run('pgrep', '-u', str(os.getuid()), '-x', 'gnome-shell', optional=True):
         raise RuntimeError('Extension source restore requires logout of GNOME; use a text console. Hot replacement is refused.')
 

@@ -1,0 +1,115 @@
+--- a/lib/overview/searchStealer.js
++++ b/lib/overview/searchStealer.js
+@@ -16,6 +16,7 @@
+         this._originalActivateDefault = null;
+         this._originalActivate = null;
+         this._overviewKeyCaptureId = 0;
++        this._parkingActor = null;
+     }
+ 
+     get entry() {
+@@ -60,6 +61,13 @@
+         if (this._search.get_parent())
+             this._search.get_parent().remove_child(this._search);
+         this._search.hide();
++
++        // Keep borrowed actors attached to the Shell stage while the popup is
++        // closed. GNOME still allocates its search controller during overview
++        // transitions, even though Spotlight owns the search UI.
++        this._parkingActor = new Clutter.Actor({visible: false, reactive: false});
++        Main.uiGroup.add_child(this._parkingActor);
++        this.park();
+ 
+         // Close the popup before activation runs.
+         this._originalActivateDefault = this._searchResults.activateDefault;
+@@ -107,6 +115,22 @@
+         }
+     }
+ 
++    park() {
++        if (!this._parkingActor)
++            return;
++        for (const actor of [this._entry, this._search]) {
++            if (!actor)
++                continue;
++            const parent = actor.get_parent();
++            if (parent !== this._parkingActor) {
++                if (parent)
++                    parent.remove_child(actor);
++                this._parkingActor.add_child(actor);
++            }
++            actor.hide();
++        }
++    }
++
+     restore() {
+         if (this._entry) {
+             this._entry.remove_style_class_name('spotlight-entry-stolen');
+@@ -139,6 +163,11 @@
+             this._searchResults = null;
+         }
+ 
++        if (this._parkingActor) {
++            this._parkingActor.destroy();
++            this._parkingActor = null;
++        }
++
+         if (Main.overview._originalToggle) {
+             Main.overview.toggle = Main.overview._originalToggle;
+             Main.overview._originalToggle = null;
+--- a/lib/popup/widget/spotlightPopup.js
++++ b/lib/popup/widget/spotlightPopup.js
+@@ -111,7 +111,7 @@
+         scheduleIdle(this, '_closeIdleId', () => this._doClose());
+     }
+ 
+-    _doClose() {
++    _doClose(animate = true) {
+         this._positioner.stop();
+         if (this._backdrop) {
+             this._backdrop.destroy();
+@@ -137,11 +137,23 @@
+             search.get_parent().remove_child(search);
+         }
+ 
++        this._stealer.park();
+         this._visible = false;
+-        this._animateClose(() => {
++        const finish = () => {
+             if (this.get_parent())
+                 Main.layoutManager.removeChrome(this);
+-        });
++        };
++        if (animate) {
++            this._animateClose(finish);
++        } else {
++            // Disable/destroy must not leave callbacks targeting a dead actor.
++            this.remove_all_transitions();
++            this.hide();
++            this.opacity = 255;
++            this.scale_x = 1.0;
++            this.scale_y = 1.0;
++            finish();
++        }
+     }
+ 
+     _syncClose() {
+@@ -149,7 +161,7 @@
+         cancelIdle(this, '_closeIdleId');
+         this._opening = false;
+         if (this._visible)
+-            this._doClose();
++            this._doClose(false);
+     }
+ 
+     _animateClose(onComplete) {
+--- a/extension.js
++++ b/extension.js
+@@ -39,6 +39,7 @@
+         this._keybindingManager.disable();
+         this._keybindingManager = null;
+         // Return the stolen widgets to the overview before destroying things so nothing leaks.
++        this._popup._syncClose();
+         this._popup.returnOverviewSearch();
+         this._popup.destroy();
+         this._popup = null;

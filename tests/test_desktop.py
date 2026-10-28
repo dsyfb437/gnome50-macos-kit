@@ -210,6 +210,18 @@ class DesktopTests(unittest.TestCase):
         self.assertNotEqual(p.returncode, 0)
         self.assertIn('Hot replacement', p.stderr)
 
+    def test_17_user_menu_runtime_roundtrip(self):
+        source = HOME / '.local/share/gnome50-macos-kit/orbit-daemon/test-version'
+        source.mkdir(parents=True, exist_ok=True)
+        payload = source / 'version.txt'; payload.write_text('locked source')
+        entry = HOME / '.local/bin/global-menu'; entry.parent.mkdir(parents=True, exist_ok=True)
+        entry.symlink_to(payload)
+        saved = backup('menu-runtime')
+        payload.write_text('changed source')
+        call('restore', '--module', 'menu-runtime', '--from', str(saved), '--execute')
+        self.assertEqual(payload.read_text(), 'locked source')
+        self.assertTrue(entry.is_symlink())
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

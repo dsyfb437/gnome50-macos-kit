@@ -1,5 +1,7 @@
 # Ubuntu 26.04.1 / GNOME 50.1 macOS 风格整合包
 
+**本轮补齐：** [补齐记录](docs/补齐记录.md)：传统 GTK3 菜单兼容入口已补齐并完成真实动作回传测试，Rime 已加入可选组；Spotlight 补丁已备份应用到文件，保持启用，等待下次登录加载与验证。
+
 **最新：** 用户已要求应用明确修复；[已应用修复记录](docs/已应用修复.md)优先于下方历史状态。Spotlight 已恢复启用，GTK4 8 处语法错误已修复，Orbit 用户级 daemon 已补齐且真实菜单动作回传测试通过。
 
 核验日期：2026-10-28（北京时间）。版本：0.1.0。默认只检查；不会自动安装、启用或更新任何上游项目。
@@ -89,6 +91,7 @@ appearance 不会安装主题、改写 GTK4 文件或把所有应用都变成浅
 | extension-settings | 仅 `/org/gnome/shell/extensions/` 参数子树；不含启用列表 |
 | input-method | 用户 Fcitx5 配置与数据目录，包含通常位于其中的 Rime 用户词库 |
 | orbit-files | 用户 global-menu 自定义菜单 |
+| menu-runtime | 本包新增的用户级 Orbit daemon、GTK3 模块及两个启动入口；恢复前需停用 Orbit，让 daemon 停止 |
 
 `all` 备份会将 shell-theme / panel-blur 并入 extension-settings，避免重复恢复同一路径。扩展设置恢复会精确替换该参数子树，但不恢复 `/org/gnome/shell/enabled-extensions`，不会重新启用 Spotlight。恢复前仍应先预览；这不是跨版本配置迁移器。
 
