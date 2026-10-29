@@ -315,7 +315,7 @@ def status():
     out['enabled_extensions_preference'] = enabled
     owner = run('gdbus', 'call', '--session', '--dest', 'org.freedesktop.DBus',
                 '--object-path', '/org/freedesktop/DBus', '--method',
-                'org.freedesktop.DBus.NameHasOwner', 'org.gnome.Shell.Extensions', optional=True)
+                'org.freedesktop.DBus.NameHasOwner', 'org.gnome.Shell', optional=True)
     out['runtime_extensions'] = (run('gnome-extensions', 'list', '--enabled', optional=True)
                                  if owner == '(true,)' else None)
     validation = run('gsettings', 'get', 'org.gnome.shell', 'disable-extension-version-validation', optional=True)
@@ -338,8 +338,6 @@ def status():
     names = ' '.join(str(x) for x in enabled).lower()
     if 'dhruva' in names and any(n in names for n in ['dash-to-dock', 'ubuntu-dock', 'macos-dock']):
         out['warnings'].append('Multiple Dock extensions enabled: retain Dhruva only after manual review')
-    if 'spotlight' in names:
-        out['warnings'].append('Spotlight appears enabled; user baseline requires disabled. No automatic changes made')
     if 'global-menu' in names and any(n in names for n in ['fildem', 'globalmenu@', 'tpct']):
         out['warnings'].append('Possible duplicate global menus')
     if 'global-menu' in names and any(n in names for n in ['window-title', 'windowtitle', 'window_title']):
