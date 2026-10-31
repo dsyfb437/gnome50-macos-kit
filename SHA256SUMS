@@ -3,7 +3,7 @@ a761e95eeaffa900d1f0e2a42ea10d5222e92c06728ceb2c89bd3cef75b23037  ./desktop.py
 b3cf358433cf83bb6ed6b43267a76306bc58ad9cca7330f82b0942cd73ef407f  ./docs/本机验收.md
 ca898f8364e5208bb4940fe05b1bca684e09e02c8c339c0430e695d9b69180e2  ./docs/仓库审计.md
 51750ed72190083abf565aeba3f889dd712de6724a79fbdeaec2c29a01e78079  ./docs/使用与恢复.md
-6de98690aaae1e894d9404210c276be467fee8152d4141b32fa0d9b4a079581e  ./docs/外观优化.md
+6547a2bdd3b76586fd3189c38c8c43a190ac14d0ef9801c884f3111005a61fee  ./docs/外观优化.md
 f87dd3df6cd515a310217c31c70f8617c07635505a2afbe3de2e5b6ba009646c  ./docs/验证结果.md
 07ed8feab4989a7cde80811625f46ce1032660121631428dee725266bbd42f19  ./docs/history/补齐记录.md
 09593f1c3a8c28659f2078f4ef9c3255f2e525839d6106ccc3700eee27b7d062  ./docs/history/测试报告.md
@@ -22,6 +22,7 @@ c69e44ec8ac00d243be9c6486a1258861b00f54f38aa4529212d731567095758  ./evidence/int
 6ac8f104fc9bf697edb978c186825af6b4cc98a3929c5abd83bb36d64120cff7  ./evidence/menu-dedupe-tests.txt
 6c5c7b02c767583bbb46858dd7245a1862c1388b5e061ccca41c2da97028ad14  ./evidence/new-session-verification.json
 7ab03143e75e0fac6aa3b78b36a2fbe70e1fb5f69e769302bd0e55a10af70d47  ./evidence/panel-style-review.json
+cbcc878cd90314d310af283c083ae73698c9593f3463192fb577cdbd1a1ec1a0  ./evidence/performance.json
 007ae0230ea993ca8413b05d7b2bb381c7a6f857a7c7d47aef1a935e9574bdd8  ./evidence/real-schema-apply.json
 cfdcf3f1dcbc202d783e09e9ba7ed1a0747526f574eb00c33a059b2bbf988455  ./evidence/schema-checks.json
 c342aa02dc9c6be8562fb309e732839fc2eb614633d69ec34253cd948c7f7d9a  ./evidence/source-fetch-test.txt
