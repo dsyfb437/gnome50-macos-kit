@@ -16,8 +16,8 @@ f87dd3df6cd515a310217c31c70f8617c07635505a2afbe3de2e5b6ba009646c  ./docs/验证�
 8e288b14ca3b5fe37a8022df3108b57b56bc825cadf342e21428c603d5435fed  ./docs/history/新会话复验.md
 492ab9046b4f7c57c44cf06d8d112045862e134d7af55ceb0429f98d5e440a6e  ./docs/history/已应用修复.md
 40a029fae9e8d3dc7e56c2a7e7226682e0d8ad0a681f19c6c57f4545eda0e643  ./docs/history/README.md
-30caf8212f2678a9281491b0e4e052b998c8fcf3c74a9163faf39080dd645e52  ./evidence/applied-repairs.json
-a6f5ae3ce44eadcffb75083614f2417074d065f7683cfcacc851ca21e6262251  ./evidence/completion-additions.json
+c18f4da578c3e0596e5de10d3891089eafc8ac3d84bc4627897d55ed06b0d369  ./evidence/applied-repairs.json
+1745168733e476cb234c55d6e52667009422bee5fcdd603fdbe397b93f069af3  ./evidence/completion-additions.json
 947d8c7b5b5c66987f078df6a1a1e23a5cd19cfdfde015f8c62b712b0f40779a  ./evidence/dock-appearance.json
 d057685b1b92e45da1ffd94f3762c0de9d94aadc8a481e1b10821166c7aed2e6  ./evidence/extensions-login.json
 98317e9548b4a1c9bc6f5a19316ece608752dc96d5de54d02f6bd240f5c4c9f2  ./evidence/gtk4-css-parse.json
@@ -30,7 +30,7 @@ c69e44ec8ac00d243be9c6486a1258861b00f54f38aa4529212d731567095758  ./evidence/int
 7ab03143e75e0fac6aa3b78b36a2fbe70e1fb5f69e769302bd0e55a10af70d47  ./evidence/panel-style-review.json
 cbcc878cd90314d310af283c083ae73698c9593f3463192fb577cdbd1a1ec1a0  ./evidence/performance.json
 e2ec1e993844cb2a7d193d8a63a1bed45f85ab52b4b0f885d338224a7ae821df  ./evidence/README.md
-007ae0230ea993ca8413b05d7b2bb381c7a6f857a7c7d47aef1a935e9574bdd8  ./evidence/real-schema-apply.json
+8f1f9f99fe6f1aa8201753ec7b82e57828dccc1274534456bdb246934f074abc  ./evidence/real-schema-apply.json
 cfdcf3f1dcbc202d783e09e9ba7ed1a0747526f574eb00c33a059b2bbf988455  ./evidence/schema-checks.json
 c342aa02dc9c6be8562fb309e732839fc2eb614633d69ec34253cd948c7f7d9a  ./evidence/source-fetch-test.txt
 7109f88e597c78234a8fd9a8a8016de83f9c6a780c0e0b1a74b518b6b1512dc4  ./evidence/spotlight-lifecycle-tests.txt
