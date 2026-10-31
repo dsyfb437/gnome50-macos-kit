@@ -9,7 +9,7 @@ f49e167c4a716a30e51d5f4916479588d1302ff47468327f7e14b418cba184e6  ./docs/额外�
 6cbd86d9fe19a0e7aca3e4a4f4a662d1899fbfe1faaf72fd339ace22054db8ae  ./docs/外观优化.md
 f87dd3df6cd515a310217c31c70f8617c07635505a2afbe3de2e5b6ba009646c  ./docs/验证结果.md
 3ed6c481d058a60368cf96c28a2428e3abc19b2e861ef2ee486dbc847f6aff79  ./docs/与macOS的差别.md
-1a39170fccc437fcad4fa810a2d21e94ef6ac2898c9c125881edaf28c2f4be4f  ./docs/中文菜单.md
+100fa744204d0d50a14e30ac1c6d2ab0d5b4950eb5b62a965da92e5b9ff2af2b  ./docs/中文菜单.md
 07ed8feab4989a7cde80811625f46ce1032660121631428dee725266bbd42f19  ./docs/history/补齐记录.md
 09593f1c3a8c28659f2078f4ef9c3255f2e525839d6106ccc3700eee27b7d062  ./docs/history/测试报告.md
 9bb9d63b423861b543fa58277ced89e80dfb93cae888ed63007cc0488199db48  ./docs/history/实际桌面验证.md
@@ -29,6 +29,7 @@ c69e44ec8ac00d243be9c6486a1258861b00f54f38aa4529212d731567095758  ./evidence/int
 6c5c7b02c767583bbb46858dd7245a1862c1388b5e061ccca41c2da97028ad14  ./evidence/new-session-verification.json
 7ab03143e75e0fac6aa3b78b36a2fbe70e1fb5f69e769302bd0e55a10af70d47  ./evidence/panel-style-review.json
 cbcc878cd90314d310af283c083ae73698c9593f3463192fb577cdbd1a1ec1a0  ./evidence/performance.json
+e2ec1e993844cb2a7d193d8a63a1bed45f85ab52b4b0f885d338224a7ae821df  ./evidence/README.md
 007ae0230ea993ca8413b05d7b2bb381c7a6f857a7c7d47aef1a935e9574bdd8  ./evidence/real-schema-apply.json
 cfdcf3f1dcbc202d783e09e9ba7ed1a0747526f574eb00c33a059b2bbf988455  ./evidence/schema-checks.json
 c342aa02dc9c6be8562fb309e732839fc2eb614633d69ec34253cd948c7f7d9a  ./evidence/source-fetch-test.txt
@@ -39,13 +40,14 @@ a7634044fc4645f78cfd2700631923b2c682674051a47162314b369996341363  ./evidence/tpc
 8bd22603c3248868ccc923638437069d372f2cd9f49a777d886ac4c6a980908d  ./evidence/tpct-build.txt
 0fedec564f912ccac6b5aaf38d50db8b484ad554766f8a8c5d9073c35496fc0b  ./evidence/upstream-static-checks.json
 c95bd3431be46bd3991803c54c773168c134e64e28f2fa1a273e5b7d3bdb4c7c  ./evidence/window-chrome.json
-e2eea45c787f78ef9c2ad5f9ca9fc3f30c516c190ae5546c851932d65e61d02d  ./evidence/zh-menus.json
+e6b216eeebd49fd0ab2b61f7092af95ca460b77ef9f10aeb658509f640185a54  ./evidence/zh-menus.json
 734ab1e783b12b7dc4a98560051ea6411f238e6760afaa2aee88d549f1e43e0d  ./.gitignore
 d86089768fb3af35b05aac4f2a8b5e5313ef16da3f2081b94b38b640c2d94b43  ./LICENSE
 f9a4c6f21b5cc13990b6d72c0813815da458717b8fa2b1c45ae1dec21268871e  ./patches/global-menu-dedupe-app-menu.patch
+a6010de897e9a18c7f18d18301079d18acb4ca44234801cd88402e4d80991e1e  ./patches/global-menu-no-arrow-specificity.patch
 ad24df69877e7ee3b0671c9f790766c1c1238bd80ee8361e8ad619568f428585  ./patches/gtk4-whitesur-light-candidate.patch
 2d54482e7cdd9cadb1e302483d4924ead29f1ccc3448e274f83e3b580a3bea81  ./patches/spotlight-stage-parking.patch
-f478ed227c1f404b3d4dd15c1dca40e8002f5d1d8bae57622dff0bcc12c58d0b  ./README.md
+c34cea04ab1019d89a989e8d5d504d56174dd8661d1c71176b9371506efbd75d  ./README.md
 4c1b996dd613ad1a6ffbef54a0c9b48dee098dd6f4b3c2e3df3ff1e21a194b32  ./sources.py
 bbba86beb94b8b9fe03e825dd8a6492d3e6af80dcd69883c3a4f64d421ad3a5c  ./style.py
 8bcd366e515a9cd3420d0d97c61c8de00c4bb967e8098e6a287cd4a1f821c2ac  ./styles/panel-light.css

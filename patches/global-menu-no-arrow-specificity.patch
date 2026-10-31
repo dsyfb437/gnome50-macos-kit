@@ -1,0 +1,8 @@
+--- a/stylesheet.css
++++ b/stylesheet.css
+@@ -1,4 +1,4 @@
+-.global-menu-no-arrow {
++.popup-menu-boxpointer.global-menu-no-arrow {
+ 	-arrow-rise: 0px;
+ 	-arrow-base: 0px;
+ 	-arrow-border-width: 0px;
