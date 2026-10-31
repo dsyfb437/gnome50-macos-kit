@@ -1,9 +1,9 @@
-8177c6f01aaf38eaa1cfb780229656281611e1fd1306e63ee490922325f3576c  ./CHANGELOG.md
+37cd73e17b97a4eaa2748e10d1b036c38c0fc0fa65f8688b3144a3f542e47d97  ./CHANGELOG.md
 45dc1a72492d480739cf95bf1f156d41c590e95d2b1e5b0af850ac8cc2f37ac3  ./desktop.py
 b3cf358433cf83bb6ed6b43267a76306bc58ad9cca7330f82b0942cd73ef407f  ./docs/本机验收.md
 ca898f8364e5208bb4940fe05b1bca684e09e02c8c339c0430e695d9b69180e2  ./docs/仓库审计.md
 79cb92cadf1d0840728374cba0d07b5069f8ff9d3d6857e2f680f0c358eece16  ./docs/登录与指纹.md
-430edd8cde1be95abb84ac4cdf210ee1ca6972f8ab20e040c9f310446e36d450  ./docs/额外扩展.md
+f49e167c4a716a30e51d5f4916479588d1302ff47468327f7e14b418cba184e6  ./docs/额外扩展.md
 451895990f45817ddaf9c012a490cc0d63bbdef25995d05cd50fe240c868b019  ./docs/使用与恢复.md
 6cbd86d9fe19a0e7aca3e4a4f4a662d1899fbfe1faaf72fd339ace22054db8ae  ./docs/外观优化.md
 f87dd3df6cd515a310217c31c70f8617c07635505a2afbe3de2e5b6ba009646c  ./docs/验证结果.md
@@ -16,7 +16,7 @@ f87dd3df6cd515a310217c31c70f8617c07635505a2afbe3de2e5b6ba009646c  ./docs/验证�
 30caf8212f2678a9281491b0e4e052b998c8fcf3c74a9163faf39080dd645e52  ./evidence/applied-repairs.json
 a6f5ae3ce44eadcffb75083614f2417074d065f7683cfcacc851ca21e6262251  ./evidence/completion-additions.json
 947d8c7b5b5c66987f078df6a1a1e23a5cd19cfdfde015f8c62b712b0f40779a  ./evidence/dock-appearance.json
-13f604e4f234cba35aef9b40e3d954e7fbbe8b5c56b8c96e0ff6406d14d38bc3  ./evidence/extensions-login.json
+d057685b1b92e45da1ffd94f3762c0de9d94aadc8a481e1b10821166c7aed2e6  ./evidence/extensions-login.json
 98317e9548b4a1c9bc6f5a19316ece608752dc96d5de54d02f6bd240f5c4c9f2  ./evidence/gtk4-css-parse.json
 97ddc98673a1c091f5f89cacc1361b131e1f24d7ea4bdb8be09076307a12dc78  ./evidence/gtk4-css-parse-log.txt
 c69e44ec8ac00d243be9c6486a1258861b00f54f38aa4529212d731567095758  ./evidence/integration-tests.txt
