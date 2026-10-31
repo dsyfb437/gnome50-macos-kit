@@ -4,3 +4,4 @@ backups/
 private/
 local-status*.json
 local-lock*.json
+dist/

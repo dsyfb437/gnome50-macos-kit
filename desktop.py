@@ -15,6 +15,7 @@ import sys
 import tempfile
 import uuid
 
+KIT_VERSION = '1.0.0'
 ROOT = Path(__file__).resolve().parent
 HOME = Path.home()
 CONFIG = Path(os.environ.get('XDG_CONFIG_HOME', HOME / '.config'))
@@ -72,6 +73,19 @@ FILES = {
 FILES['input-method'] = [CONFIG / 'fcitx5', DATA / 'fcitx5']
 TREE = '/org/gnome/shell/extensions/'
 MODULES = list(SETTINGS) + list(FILES) + ['extension-settings']
+# Visual profile applied by `install`; backup/restore stay per-module.
+INSTALL_MODULES = ['appearance', 'font', 'buttons', 'panel-blur', 'status-area',
+                   'macos-dock', 'shell-theme']
+USER_THEME = 'org.gnome.shell.extensions.user-theme'
+REQUIRED_EXTENSIONS = {
+ 'user-theme@gnome-shell-extensions.gcampax.github.com': 'shell-theme',
+ 'blur-my-shell@aunetx': 'panel-blur, macos-dock',
+ 'dhruva@narkagni': 'macos-dock',
+ 'global-menu@unmade.space': 'status-area',
+ 'just-perfection-desktop@just-perfection': 'status-area',
+ 'ubuntu-appindicators@ubuntu.com': 'status-area',
+ 'spotlight@nin': 'search lifecycle patch',
+}
 
 
 def run(*args, optional=False):
@@ -317,7 +331,7 @@ def offline_guard(modules):
         raise RuntimeError('Extension source restore requires logout of GNOME; use a text console. Hot replacement is refused.')
 
 
-def status():
+def collect_status():
     out = {'notice': 'Read-only inventory of this execution environment; visual compatibility is untested',
            'gnome': run('gnome-shell', '--version', optional=True),
            'os': Path('/etc/os-release').read_text(), 'session': os.environ.get('XDG_SESSION_TYPE'),
@@ -368,7 +382,112 @@ def status():
         out['files'][m] = [{'path': str(p), 'present': exists(p), 'symlink': os.readlink(p) if p.is_symlink() else None} for p in paths]
     for tool in ['gnome-sushi', 'fcitx5', 'rime_deployer', 'global-menu', 'ulauncher']:
         out.setdefault('tools', {})[tool] = shutil.which(tool)
-    print(json.dumps(out, ensure_ascii=False, indent=2))
+    return out
+
+
+def status():
+    print(json.dumps(collect_status(), ensure_ascii=False, indent=2))
+
+
+def _enabled_extensions():
+    raw = run('gsettings', 'get', 'org.gnome.shell', 'enabled-extensions', optional=True)
+    try:
+        return ast.literal_eval((raw or '[]').removeprefix('@as '))
+    except (ValueError, SyntaxError):
+        return []
+
+
+def verify():
+    """Read-only acceptance check. Returns 0 when every check passes."""
+    checks = []
+
+    def check(name, fn):
+        try:
+            checks.append({'name': name, 'ok': True, 'detail': fn()})
+        except (RuntimeError, OSError, ValueError, KeyError, TypeError, json.JSONDecodeError, subprocess.SubprocessError) as exc:
+            checks.append({'name': name, 'ok': False, 'detail': str(exc)})
+
+    def session_bus():
+        if not os.environ.get('DBUS_SESSION_BUS_ADDRESS'):
+            raise RuntimeError('no session bus')
+        return 'session bus present'
+
+    def gnome_version():
+        version = run('gnome-shell', '--version', optional=True) or ''
+        if not version.startswith('GNOME Shell 50.'):
+            raise RuntimeError(f'expected GNOME Shell 50.x, got {version or "unknown"}')
+        return version
+
+    state = {}
+
+    def settings_match():
+        state['status'] = collect_status()
+        unavailable = [k for k, v in state['status']['settings'].items() if 'unavailable' in v]
+        if unavailable:
+            raise RuntimeError(f'{len(unavailable)} setting(s) unavailable: ' + ', '.join(unavailable[:4]))
+        bad = [k for k, v in state['status']['settings'].items() if str(v['current']) != str(v['target'])]
+        if bad:
+            raise RuntimeError(f'{len(bad)} setting(s) differ: ' + ', '.join(bad[:6]))
+        return f'{len(state["status"]["settings"])} settings match the profile'
+
+    def extensions():
+        enabled = set(_enabled_extensions())
+        missing = [uuid for uuid in REQUIRED_EXTENSIONS if uuid not in enabled]
+        if missing:
+            raise RuntimeError('missing or disabled: ' + ', '.join(missing))
+        return f'{len(REQUIRED_EXTENSIONS)} required extensions enabled'
+
+    def shell_theme():
+        name = run(*gs(USER_THEME), 'get', USER_THEME, 'name').strip().strip("'")
+        target = ast.literal_eval(SETTINGS['shell-theme'][0][3])
+        if name != target:
+            raise RuntimeError(f'selected {name!r}, profile expects {target!r}')
+        for root in (HOME / '.themes', DATA / 'themes'):
+            if (root / name / 'gnome-shell/gnome-shell.css').is_file():
+                return f'{name} present in {root}'
+        raise RuntimeError(f'generated theme files missing for {name}')
+
+    def spotlight():
+        proc = subprocess.run([sys.executable, str(ROOT / 'verify-after-login.py')],
+                              text=True, capture_output=True, timeout=45)
+        data = json.loads(proc.stdout)
+        if not data.get('patched_files_match'):
+            raise RuntimeError('Spotlight patch files changed')
+        if not data.get('spotlight_active'):
+            raise RuntimeError('Spotlight extension is not active')
+        return 'active with patched files matching'
+
+    def menu_dedupe():
+        ext = DATA / 'gnome-shell/extensions/global-menu@unmade.space'
+        native = (ext / 'nativeMenu.js').read_text()
+        install = (ext / 'extension.js').read_text()
+        if 'splitBarMenus' not in native or 'setItems(items, this._winTracker.focus_app' not in install:
+            raise RuntimeError('app-menu dedupe patch is not installed')
+        return 'dedupe patch present in the installed extension'
+
+    def terminal_entry():
+        entry = HOME / '.local/share/applications/org.gnome.Ptyxis.desktop'
+        if not entry.is_file():
+            return 'no local Ptyxis override; nothing to leak'
+        if 'GTK_THEME' in entry.read_text():
+            raise RuntimeError('Ptyxis desktop entry still exports GTK_THEME to child apps')
+        return 'Ptyxis no longer exports GTK_THEME'
+
+    check('session-bus', session_bus)
+    check('gnome-50', gnome_version)
+    check('settings', settings_match)
+    check('extensions', extensions)
+    check('shell-theme', shell_theme)
+    check('spotlight', spotlight)
+    check('menu-dedupe', menu_dedupe)
+    check('terminal-env', terminal_entry)
+
+    report = {'version': KIT_VERSION,
+              'ok': all(c['ok'] for c in checks),
+              'checks': checks,
+              'warnings': state.get('status', {}).get('warnings', [])}
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0 if report['ok'] else 1
 
 
 @contextlib.contextmanager
@@ -384,7 +503,8 @@ def lock():
 def main():
     os.umask(0o077)
     p = argparse.ArgumentParser(description='默认只读。apply/restore 默认 dry-run；实际写入必须 --execute。')
-    p.add_argument('command', nargs='?', choices=['status', 'apply', 'backup', 'restore'], default='status')
+    p.add_argument('command', nargs='?', choices=['status', 'install', 'verify', 'apply', 'backup', 'restore'], default='status')
+    p.add_argument('--version', action='version', version=f'gnome50-macos-kit {KIT_VERSION}')
     p.add_argument('--module', action='append', help=', '.join(MODULES) + '; repeat option; backup supports all')
     p.add_argument('--from', dest='source', type=Path, help='Backup directory to restore')
     mode = p.add_mutually_exclusive_group()
@@ -394,15 +514,28 @@ def main():
     if args.command == 'status':
         status()
         return
-    modules = get_modules(args, list(SETTINGS) if args.command == 'apply' else MODULES)
+    if args.command == 'verify':
+        sys.exit(verify())
+    if args.command == 'install':
+        modules = INSTALL_MODULES
+    else:
+        modules = get_modules(args, list(SETTINGS) if args.command == 'apply' else MODULES)
     if args.command == 'restore' and args.source is None:
         raise RuntimeError('restore needs --from')
     source = args.source.absolute() if args.source else None
     b = load_backup(source, modules) if args.command == 'restore' else None
     for m in modules:
-        if args.command == 'apply':
-            for schema, path, key, value in SETTINGS[m]:
-                print(f'PLAN {m}: {schema} {key} => {value} (explicit current: {run("dconf", "read", path + key) or "<unset>"})')
+        if args.command in ('apply', 'install'):
+            rows = SETTINGS[m]
+            changed = 0
+            for schema, path, key, value in rows:
+                current = run(*gs(schema), 'get', schema, key) if args.command == 'install' else (run('dconf', 'read', path + key) or '<unset>')
+                if args.command == 'install' and current == value:
+                    continue
+                changed += 1
+                print(f'PLAN {m}: {schema} {key} => {value} (explicit current: {current})')
+            if args.command == 'install' and not changed:
+                print(f'PLAN {m}: already matches the profile')
         else:
             print(f'PLAN {args.command}: {m}')
     if not args.execute:
@@ -418,16 +551,21 @@ def main():
         if args.command == 'backup':
             snapshot(modules)
             return
-        if args.command == 'apply':
+        if args.command in ('apply', 'install'):
             version = run('gnome-shell', '--version')
             if not version.startswith('GNOME Shell 50.'):
                 raise RuntimeError('Application is restricted to Shell 50.x; no force flag')
             preflight(modules)
+            if args.command == 'install':
+                theme = ast.literal_eval(SETTINGS['shell-theme'][0][3])
+                if not any((r / theme / 'gnome-shell/gnome-shell.css').is_file()
+                           for r in (HOME / '.themes', DATA / 'themes')):
+                    raise RuntimeError(f'Missing generated theme {theme}; run style.py --execute first')
         else:
             offline_guard(modules)
         safety, prior = snapshot(modules)
         try:
-            if args.command == 'apply':
+            if args.command in ('apply', 'install'):
                 for m in modules:
                     for schema, path, key, value in SETTINGS[m]:
                         run(*gs(schema), 'set', schema, key, value)

@@ -34,6 +34,26 @@
 
 完整结论与证据见 [验证结果](docs/验证结果.md)。
 
+## 安装、验证与发布
+
+当前版本 **1.0.0**。`install` 按固定顺序应用视觉配置模块，写入前自动备份；默认只显示与当前配置的差异，不会改桌面。
+
+```bash
+python3 desktop.py install --dry-run     # 查看差异，不写入
+python3 desktop.py install --execute     # 备份后应用视觉配置
+python3 desktop.py verify                # 只读验收，失败时返回 1
+python3 desktop.py --version
+```
+
+`verify` 会检查会话总线、GNOME 50、配置目标是否一致、必需扩展、生成的 Shell 主题、Spotlight 补丁、全局菜单去重补丁和 Ptyxis 环境泄漏，输出 JSON。
+
+发布包从已提交的代码构建，不包含 `.git`、缓存或私人文件：
+
+```bash
+tools/build-release.sh
+# dist/gnome50-macos-kit-1.0.0.tar.gz 和 .sha256
+```
+
 ## 从这里开始
 
 在项目根目录运行，依赖 Python 3.10+ 和 GNOME 用户会话：

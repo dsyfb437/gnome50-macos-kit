@@ -223,5 +223,25 @@ class DesktopTests(unittest.TestCase):
         self.assertTrue(entry.is_symlink())
 
 
+    def test_18_version_and_install_dependency_check(self):
+        p = call('--version')
+        self.assertIn('gnome50-macos-kit', p.stdout)
+        # The isolated HOME has no Dhruva/global-menu schemas, so install must
+        # refuse before planning instead of half-applying the profile.
+        p = call('install', '--dry-run', ok=False)
+        self.assertNotEqual(p.returncode, 0)
+        self.assertIn('Missing schema', p.stderr)
+
+    def test_19_verify_is_readonly_and_reports_failures(self):
+        before = sorted(str(x) for x in STATE.rglob('*')) if STATE.exists() else None
+        p = call('verify', ok=False)
+        after = sorted(str(x) for x in STATE.rglob('*')) if STATE.exists() else None
+        self.assertNotEqual(p.returncode, 0)
+        report = json.loads(p.stdout)
+        self.assertFalse(report['ok'])
+        names = {c['name'] for c in report['checks']}
+        self.assertIn('settings', names)
+        self.assertEqual(before, after, 'verify must not create state files')
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
