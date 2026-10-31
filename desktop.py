@@ -15,7 +15,7 @@ import sys
 import tempfile
 import uuid
 
-KIT_VERSION = '1.1.0'
+KIT_VERSION = '1.1.1'
 ROOT = Path(__file__).resolve().parent
 HOME = Path.home()
 CONFIG = Path(os.environ.get('XDG_CONFIG_HOME', HOME / '.config'))
@@ -631,7 +631,12 @@ def main():
             version = run('gnome-shell', '--version')
             if not version.startswith('GNOME Shell 50.'):
                 raise RuntimeError('Application is restricted to Shell 50.x; no force flag')
-            preflight(modules)
+            try:
+                preflight(modules)
+            except RuntimeError as exc:
+                if args.command == 'install':
+                    raise RuntimeError(f'{exc}; run "python3 desktop.py doctor" for the prerequisite list') from exc
+                raise
             if args.command == 'install':
                 theme = ast.literal_eval(SETTINGS['shell-theme'][0][3])
                 if not any((r / theme / 'gnome-shell/gnome-shell.css').is_file()

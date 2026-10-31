@@ -36,7 +36,7 @@
 
 ## 安装、验证与发布
 
-当前版本 **1.1.0**。`doctor` 做离线前置检查（主题、图标、字体、扩展、schema、生成的主题），`install` 按固定顺序应用视觉配置模块，写入前自动备份；默认只显示差异，不会改桌面。
+当前版本 **1.1.1**。`doctor` 做离线前置检查（主题、图标、字体、扩展、schema、生成的主题），`install` 按固定顺序应用视觉配置模块，写入前自动备份；默认只显示差异，不会改桌面。
 
 ```bash
 python3 desktop.py doctor                # 新机器先确认依赖齐全（缺失项带提示）
@@ -52,7 +52,7 @@ python3 desktop.py --version
 
 ```bash
 tools/build-release.sh
-# dist/gnome50-macos-kit-1.1.0.tar.gz 和 .sha256
+# dist/gnome50-macos-kit-1.1.1.tar.gz 和 .sha256
 ```
 
 ## 从这里开始
