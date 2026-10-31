@@ -54,7 +54,9 @@ SETTINGS['status-area'] = [
  ('org.gnome.shell.extensions.appindicator', '/org/gnome/shell/extensions/appindicator/',
   'icon-saturation', '1.0'),
  ('org.gnome.shell.extensions.global-menu', '/org/gnome/shell/extensions/global-menu/',
-  'menu-font-size', '11')]
+  'menu-font-size', '11'),
+ ('org.gnome.shell.extensions.just-perfection',
+  '/org/gnome/shell/extensions/just-perfection/', 'panel-indicator-padding-size', '6')]
 FILES = {
  'gtk3': [CONFIG / 'gtk-3.0'], 'gtk4': [CONFIG / 'gtk-4.0'],
  'themes': [HOME / '.themes', DATA / 'themes'],

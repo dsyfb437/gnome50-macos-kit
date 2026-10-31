@@ -1,8 +1,8 @@
-fb33e77c6f8c6e2ebef8a3cd90ba11750b211c0ac11cd4289c6c18118ee3e496  ./desktop.py
+e611fa267ef8d9dc07b435d124109d9a9342c45af81ebd1616f527c3cb545f2e  ./desktop.py
 b3cf358433cf83bb6ed6b43267a76306bc58ad9cca7330f82b0942cd73ef407f  ./docs/本机验收.md
 ca898f8364e5208bb4940fe05b1bca684e09e02c8c339c0430e695d9b69180e2  ./docs/仓库审计.md
 51750ed72190083abf565aeba3f889dd712de6724a79fbdeaec2c29a01e78079  ./docs/使用与恢复.md
-4c006bf9f6bcfedea393a5f47e065885b5e50eba003c72cbf64d419d6bb3b2b3  ./docs/外观优化.md
+2eefbbd4da9596f107fe4c83354683007b04bd19ab91746f9f7cac52a3cbcf47  ./docs/外观优化.md
 f87dd3df6cd515a310217c31c70f8617c07635505a2afbe3de2e5b6ba009646c  ./docs/验证结果.md
 07ed8feab4989a7cde80811625f46ce1032660121631428dee725266bbd42f19  ./docs/history/补齐记录.md
 09593f1c3a8c28659f2078f4ef9c3255f2e525839d6106ccc3700eee27b7d062  ./docs/history/测试报告.md
@@ -20,12 +20,12 @@ c69e44ec8ac00d243be9c6486a1258861b00f54f38aa4529212d731567095758  ./evidence/int
 ef6d63ae9dab68be9652416b01b38b42a16dc6aed640d2dfc690345c2e7435df  ./evidence/menu-dedupe.json
 6ac8f104fc9bf697edb978c186825af6b4cc98a3929c5abd83bb36d64120cff7  ./evidence/menu-dedupe-tests.txt
 6c5c7b02c767583bbb46858dd7245a1862c1388b5e061ccca41c2da97028ad14  ./evidence/new-session-verification.json
-9a8bfd6341fed600ef95affe8e1041069a2120c21dde45b750244606a8c905f5  ./evidence/panel-style-review.json
+1d9f8ac7d52e96671d32af6d087702e30ac9cd12305c8d7eaadf3db4534afeef  ./evidence/panel-style-review.json
 007ae0230ea993ca8413b05d7b2bb381c7a6f857a7c7d47aef1a935e9574bdd8  ./evidence/real-schema-apply.json
 cfdcf3f1dcbc202d783e09e9ba7ed1a0747526f574eb00c33a059b2bbf988455  ./evidence/schema-checks.json
 c342aa02dc9c6be8562fb309e732839fc2eb614633d69ec34253cd948c7f7d9a  ./evidence/source-fetch-test.txt
 7109f88e597c78234a8fd9a8a8016de83f9c6a780c0e0b1a74b518b6b1512dc4  ./evidence/spotlight-lifecycle-tests.txt
-0ae8096f726853e436dc5a9ee8ca40b5e0a45c938941cd52fa11c7389346f928  ./evidence/status-area.json
+5115eff88cc51d9e6cc8279e937a4597842657bfe115b8ac141907aabde1a63e  ./evidence/status-area.json
 0f7e4b97443e54aca647179972594d13bb587afcbf151fab8228148587ea844a  ./evidence/style-tests.txt
 a7634044fc4645f78cfd2700631923b2c682674051a47162314b369996341363  ./evidence/tpct-build-artifacts.json
 8bd22603c3248868ccc923638437069d372f2cd9f49a777d886ac4c6a980908d  ./evidence/tpct-build.txt
