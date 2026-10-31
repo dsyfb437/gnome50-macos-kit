@@ -243,5 +243,16 @@ class DesktopTests(unittest.TestCase):
         self.assertIn('settings', names)
         self.assertEqual(before, after, 'verify must not create state files')
 
+    def test_20_doctor_is_readonly_and_lists_missing(self):
+        before = sorted(str(x) for x in STATE.rglob('*')) if STATE.exists() else None
+        p = call('doctor', ok=False)
+        after = sorted(str(x) for x in STATE.rglob('*')) if STATE.exists() else None
+        self.assertNotEqual(p.returncode, 0)
+        report = json.loads(p.stdout)
+        self.assertFalse(report['ok'])
+        self.assertTrue(any(n.startswith('theme:') for n in report['missing']))
+        self.assertTrue(any(c.get('hint') for c in report['checks'] if not c['ok']))
+        self.assertEqual(before, after, 'doctor must not create state files')
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

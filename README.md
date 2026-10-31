@@ -36,22 +36,23 @@
 
 ## 安装、验证与发布
 
-当前版本 **1.0.1**。`install` 按固定顺序应用视觉配置模块，写入前自动备份；默认只显示与当前配置的差异，不会改桌面。
+当前版本 **1.1.0**。`doctor` 做离线前置检查（主题、图标、字体、扩展、schema、生成的主题），`install` 按固定顺序应用视觉配置模块，写入前自动备份；默认只显示差异，不会改桌面。
 
 ```bash
+python3 desktop.py doctor                # 新机器先确认依赖齐全（缺失项带提示）
 python3 desktop.py install --dry-run     # 查看差异，不写入
 python3 desktop.py install --execute     # 备份后应用视觉配置
 python3 desktop.py verify                # 只读验收，失败时返回 1
 python3 desktop.py --version
 ```
 
-`verify` 会检查会话总线、GNOME 50、配置目标是否一致、必需扩展、生成的 Shell 主题、Spotlight 补丁、全局菜单去重补丁和 Ptyxis 环境泄漏，输出 JSON。
+`doctor` 只做离线检查并列出缺失项及提示；`verify` 则在运行中的会话里检查配置目标、扩展、Shell 主题、Spotlight 补丁、菜单去重补丁，以及 Ptyxis / VS Code 启动项是否仍导出 `GTK_THEME`，输出 JSON。
 
 发布包从已提交的代码构建，不包含 `.git`、缓存或私人文件：
 
 ```bash
 tools/build-release.sh
-# dist/gnome50-macos-kit-1.0.1.tar.gz 和 .sha256
+# dist/gnome50-macos-kit-1.1.0.tar.gz 和 .sha256
 ```
 
 ## 从这里开始

@@ -15,7 +15,7 @@ import sys
 import tempfile
 import uuid
 
-KIT_VERSION = '1.0.1'
+KIT_VERSION = '1.1.0'
 ROOT = Path(__file__).resolve().parent
 HOME = Path.home()
 CONFIG = Path(os.environ.get('XDG_CONFIG_HOME', HOME / '.config'))
@@ -389,6 +389,79 @@ def status():
     print(json.dumps(collect_status(), ensure_ascii=False, indent=2))
 
 
+def doctor():
+    """Offline prerequisite report for a fresh machine. Read-only."""
+    checks = []
+
+    def check(name, fn, hint=None):
+        try:
+            checks.append({'name': name, 'ok': True, 'detail': fn()})
+        except (RuntimeError, OSError, ValueError, KeyError) as exc:
+            row = {'name': name, 'ok': False, 'detail': str(exc)}
+            if hint:
+                row['hint'] = hint
+            checks.append(row)
+
+    def theme_file(name, part):
+        for root in (HOME / '.themes', DATA / 'themes', Path('/usr/share/themes')):
+            path = root / name / part
+            if path.is_file():
+                return str(path)
+        raise RuntimeError(f'{name}/{part} missing')
+
+    def icon_theme(name):
+        for root in (HOME / '.icons', DATA / 'icons', Path('/usr/share/icons')):
+            path = root / name / 'index.theme'
+            if path.is_file():
+                return str(path)
+        raise RuntimeError(f'icon/cursor theme {name} missing')
+
+    def font():
+        family = run('fc-match', '-f', '%{family}', 'Inter')
+        if 'Inter' not in family.split(','):
+            raise RuntimeError(f'Inter missing (fallback: {family})')
+        return family
+
+    def extension(uuid):
+        for root in (DATA / 'gnome-shell/extensions', Path('/usr/share/gnome-shell/extensions')):
+            meta = root / uuid / 'metadata.json'
+            if meta.is_file():
+                data = json.loads(meta.read_text())
+                return f"{data.get('name', uuid)} {data.get('version') or ''} at {meta.parent}".strip()
+        raise RuntimeError(f'extension {uuid} is not installed')
+
+    def schema(name):
+        return ' '.join(gs(name))
+
+    check('gnome-50', lambda: run('gnome-shell', '--version'), 'This kit targets GNOME Shell 50.x only')
+    check('theme:gtk3', lambda: theme_file('WhiteSur-Light', 'gtk-3.0/gtk.css'),
+          'Install WhiteSur GTK theme; the kit does not run installers')
+    check('theme:gtk4', lambda: theme_file('WhiteSur-Light', 'gtk-4.0/gtk.css'),
+          'Install WhiteSur GTK theme; the kit does not run installers')
+    check('theme:shell', lambda: theme_file('WhiteSur-Light', 'gnome-shell/gnome-shell.css'),
+          'Install WhiteSur GTK theme; the kit does not run installers')
+    check('icons:WhiteSur', lambda: icon_theme('WhiteSur'), 'Install WhiteSur icon theme')
+    check('cursors:WhiteSur-cursors', lambda: icon_theme('WhiteSur-cursors'), 'Install WhiteSur cursor theme')
+    check('font:Inter', font, 'Install the Inter font family')
+    for uuid in REQUIRED_EXTENSIONS:
+        check('extension:' + uuid, lambda u=uuid: extension(u),
+              'Install the extension from its upstream project; the kit never runs its installer')
+    for name in sorted({schema for rows in SETTINGS.values() for schema, _, _, _ in rows}):
+        check('schema:' + name, lambda n=name: schema(n),
+              'The schema comes from the extension that owns it; install and enable it first')
+    theme_name = ast.literal_eval(SETTINGS['shell-theme'][0][3])
+    check('generated-theme:' + theme_name,
+          lambda: theme_file(theme_name, 'gnome-shell/gnome-shell.css'),
+          'Run style.py --execute to build the panel variant before install')
+    for tool in ('gsettings', 'dconf'):
+        check('tool:' + tool, lambda t=tool: shutil.which(t) or (_ for _ in ()).throw(RuntimeError(f'{t} not found')))
+    report = {'version': KIT_VERSION, 'ok': all(c['ok'] for c in checks),
+              'checks': checks,
+              'missing': [c['name'] for c in checks if not c['ok']]}
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0 if report['ok'] else 1
+
+
 def _enabled_extensions():
     raw = run('gsettings', 'get', 'org.gnome.shell', 'enabled-extensions', optional=True)
     try:
@@ -466,12 +539,13 @@ def verify():
         return 'dedupe patch present in the installed extension'
 
     def terminal_entry():
-        entry = HOME / '.local/share/applications/org.gnome.Ptyxis.desktop'
-        if not entry.is_file():
-            return 'no local Ptyxis override; nothing to leak'
-        if 'GTK_THEME' in entry.read_text():
-            raise RuntimeError('Ptyxis desktop entry still exports GTK_THEME to child apps')
-        return 'Ptyxis no longer exports GTK_THEME'
+        entries = [HOME / '.local/share/applications/org.gnome.Ptyxis.desktop',
+                   HOME / '.local/share/applications/com.microsoft.VSCode.desktop']
+        leaks = [e.name for e in entries if e.is_file() and 'GTK_THEME' in e.read_text()]
+        if leaks:
+            raise RuntimeError('desktop entries still export GTK_THEME: ' + ', '.join(leaks))
+        present = [e.name for e in entries if e.is_file()]
+        return 'no GTK_THEME leak in ' + (', '.join(present) if present else 'checked entries')
 
     check('session-bus', session_bus)
     check('gnome-50', gnome_version)
@@ -503,7 +577,7 @@ def lock():
 def main():
     os.umask(0o077)
     p = argparse.ArgumentParser(description='默认只读。apply/restore 默认 dry-run；实际写入必须 --execute。')
-    p.add_argument('command', nargs='?', choices=['status', 'install', 'verify', 'apply', 'backup', 'restore'], default='status')
+    p.add_argument('command', nargs='?', choices=['status', 'doctor', 'install', 'verify', 'apply', 'backup', 'restore'], default='status')
     p.add_argument('--version', action='version', version=f'gnome50-macos-kit {KIT_VERSION}')
     p.add_argument('--module', action='append', help=', '.join(MODULES) + '; repeat option; backup supports all')
     p.add_argument('--from', dest='source', type=Path, help='Backup directory to restore')
@@ -514,6 +588,8 @@ def main():
     if args.command == 'status':
         status()
         return
+    if args.command == 'doctor':
+        sys.exit(doctor())
     if args.command == 'verify':
         sys.exit(verify())
     if args.command == 'install':
