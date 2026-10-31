@@ -36,7 +36,7 @@
 
 ## 安装、验证与发布
 
-当前版本 **1.1.1**。`doctor` 做离线前置检查（主题、图标、字体、扩展、schema、生成的主题），`install` 按固定顺序应用视觉配置模块，写入前自动备份；默认只显示差异，不会改桌面。
+当前版本 **1.2.0**。`doctor` 做离线前置检查（主题、图标、字体、扩展、schema、生成的主题），`install` 按固定顺序应用视觉配置模块，写入前自动备份；默认只显示差异，不会改桌面。
 
 ```bash
 python3 desktop.py doctor                # 新机器先确认依赖齐全（缺失项带提示）
@@ -52,7 +52,7 @@ python3 desktop.py --version
 
 ```bash
 tools/build-release.sh
-# dist/gnome50-macos-kit-1.1.1.tar.gz 和 .sha256
+# dist/gnome50-macos-kit-1.2.0.tar.gz 和 .sha256
 ```
 
 ## 从这里开始
@@ -79,6 +79,8 @@ python3 desktop.py apply --module panel-blur --dry-run
 | 查看已经做了什么、哪些尚未验证 | [验证结果](docs/验证结果.md) |
 | 查参数、模块、备份、恢复及固定源码获取 | [使用与恢复](docs/使用与恢复.md) |
 | 实际检查动画、主题、输入和菜单 | [本机验收](docs/本机验收.md) |
+| 登录慢、指纹后还要密码 | [登录与指纹](docs/登录与指纹.md) |
+| 新增扩展与回滚 | [额外扩展](docs/额外扩展.md) |
 | 查看六个 GitHub 项目兼容性、安装行为与冲突 | [仓库审计](docs/仓库审计.md) |
 | 追溯诊断、修复与复验过程 | [历史记录](docs/history/README.md) |
 

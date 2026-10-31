@@ -1,7 +1,9 @@
-83088dcf7908563b8e7c5e957b78455eab286cd5dde9986f68ae6ae2d1d52c98  ./CHANGELOG.md
-39b8251d067fb832ddfa3390cbbd0b3014c3ede5b717f93009f627e554dfca04  ./desktop.py
+8177c6f01aaf38eaa1cfb780229656281611e1fd1306e63ee490922325f3576c  ./CHANGELOG.md
+45dc1a72492d480739cf95bf1f156d41c590e95d2b1e5b0af850ac8cc2f37ac3  ./desktop.py
 b3cf358433cf83bb6ed6b43267a76306bc58ad9cca7330f82b0942cd73ef407f  ./docs/本机验收.md
 ca898f8364e5208bb4940fe05b1bca684e09e02c8c339c0430e695d9b69180e2  ./docs/仓库审计.md
+79cb92cadf1d0840728374cba0d07b5069f8ff9d3d6857e2f680f0c358eece16  ./docs/登录与指纹.md
+430edd8cde1be95abb84ac4cdf210ee1ca6972f8ab20e040c9f310446e36d450  ./docs/额外扩展.md
 451895990f45817ddaf9c012a490cc0d63bbdef25995d05cd50fe240c868b019  ./docs/使用与恢复.md
 6cbd86d9fe19a0e7aca3e4a4f4a662d1899fbfe1faaf72fd339ace22054db8ae  ./docs/外观优化.md
 f87dd3df6cd515a310217c31c70f8617c07635505a2afbe3de2e5b6ba009646c  ./docs/验证结果.md
@@ -14,6 +16,7 @@ f87dd3df6cd515a310217c31c70f8617c07635505a2afbe3de2e5b6ba009646c  ./docs/验证�
 30caf8212f2678a9281491b0e4e052b998c8fcf3c74a9163faf39080dd645e52  ./evidence/applied-repairs.json
 a6f5ae3ce44eadcffb75083614f2417074d065f7683cfcacc851ca21e6262251  ./evidence/completion-additions.json
 947d8c7b5b5c66987f078df6a1a1e23a5cd19cfdfde015f8c62b712b0f40779a  ./evidence/dock-appearance.json
+13f604e4f234cba35aef9b40e3d954e7fbbe8b5c56b8c96e0ff6406d14d38bc3  ./evidence/extensions-login.json
 98317e9548b4a1c9bc6f5a19316ece608752dc96d5de54d02f6bd240f5c4c9f2  ./evidence/gtk4-css-parse.json
 97ddc98673a1c091f5f89cacc1361b131e1f24d7ea4bdb8be09076307a12dc78  ./evidence/gtk4-css-parse-log.txt
 c69e44ec8ac00d243be9c6486a1258861b00f54f38aa4529212d731567095758  ./evidence/integration-tests.txt
@@ -38,7 +41,7 @@ d86089768fb3af35b05aac4f2a8b5e5313ef16da3f2081b94b38b640c2d94b43  ./LICENSE
 f9a4c6f21b5cc13990b6d72c0813815da458717b8fa2b1c45ae1dec21268871e  ./patches/global-menu-dedupe-app-menu.patch
 ad24df69877e7ee3b0671c9f790766c1c1238bd80ee8361e8ad619568f428585  ./patches/gtk4-whitesur-light-candidate.patch
 2d54482e7cdd9cadb1e302483d4924ead29f1ccc3448e274f83e3b580a3bea81  ./patches/spotlight-stage-parking.patch
-b655e71a113e113759a7de7d6de7f2ac6930a4aaa53c0e28d9b359c4f5e561f5  ./README.md
+55fb71dae6f9b5f66c8b0f1c04306a2f481078cec8babbf1c0d25c7f140655e2  ./README.md
 4c1b996dd613ad1a6ffbef54a0c9b48dee098dd6f4b3c2e3df3ff1e21a194b32  ./sources.py
 bbba86beb94b8b9fe03e825dd8a6492d3e6af80dcd69883c3a4f64d421ad3a5c  ./style.py
 8bcd366e515a9cd3420d0d97c61c8de00c4bb967e8098e6a287cd4a1f821c2ac  ./styles/panel-light.css
@@ -48,5 +51,6 @@ bbba86beb94b8b9fe03e825dd8a6492d3e6af80dcd69883c3a4f64d421ad3a5c  ./style.py
 27c2d5b681dabf3999502f913aba5f3c84962453b782fa76bedd0b46375c5372  ./tests/test_spotlight_lifecycle.cjs
 123fa65b40b2655b3e3ec4f5821bf167416a71e36cbbf276d01446bb85e19272  ./tests/test_style.py
 11a1f940e800d8464e4e888db9093487b93748de9211a9a341358252e4cf374a  ./tools/build-release.sh
+9897ee60b00201fbbff6ac265cd0c6b227534d552ecb9b1e31619fbef519a60e  ./tools/login-report.sh
 0fefe913a1e7f7acb3d0d53d7cfa31ad874857d77d08c8fd81578ca580cd55e5  ./upstreams.lock.json
 bcf00634135d58d036c8122b6e7e90c17044f54731dcc488e55e0222b86b9a9f  ./verify-after-login.py
