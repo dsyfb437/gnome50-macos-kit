@@ -1,8 +1,8 @@
-5c0a363252a5cc11e052966d40dbfad8ac33216b0f7613285884f54cc2966fea  ./desktop.py
+fb33e77c6f8c6e2ebef8a3cd90ba11750b211c0ac11cd4289c6c18118ee3e496  ./desktop.py
 b3cf358433cf83bb6ed6b43267a76306bc58ad9cca7330f82b0942cd73ef407f  ./docs/本机验收.md
 ca898f8364e5208bb4940fe05b1bca684e09e02c8c339c0430e695d9b69180e2  ./docs/仓库审计.md
 51750ed72190083abf565aeba3f889dd712de6724a79fbdeaec2c29a01e78079  ./docs/使用与恢复.md
-68b62e603e311c23991274abf252262bbe3ae47a1a3aebedefdfd5f14c363ce3  ./docs/外观优化.md
+4c006bf9f6bcfedea393a5f47e065885b5e50eba003c72cbf64d419d6bb3b2b3  ./docs/外观优化.md
 f87dd3df6cd515a310217c31c70f8617c07635505a2afbe3de2e5b6ba009646c  ./docs/验证结果.md
 07ed8feab4989a7cde80811625f46ce1032660121631428dee725266bbd42f19  ./docs/history/补齐记录.md
 09593f1c3a8c28659f2078f4ef9c3255f2e525839d6106ccc3700eee27b7d062  ./docs/history/测试报告.md
@@ -25,6 +25,7 @@ ef6d63ae9dab68be9652416b01b38b42a16dc6aed640d2dfc690345c2e7435df  ./evidence/men
 cfdcf3f1dcbc202d783e09e9ba7ed1a0747526f574eb00c33a059b2bbf988455  ./evidence/schema-checks.json
 c342aa02dc9c6be8562fb309e732839fc2eb614633d69ec34253cd948c7f7d9a  ./evidence/source-fetch-test.txt
 7109f88e597c78234a8fd9a8a8016de83f9c6a780c0e0b1a74b518b6b1512dc4  ./evidence/spotlight-lifecycle-tests.txt
+0ae8096f726853e436dc5a9ee8ca40b5e0a45c938941cd52fa11c7389346f928  ./evidence/status-area.json
 0f7e4b97443e54aca647179972594d13bb587afcbf151fab8228148587ea844a  ./evidence/style-tests.txt
 a7634044fc4645f78cfd2700631923b2c682674051a47162314b369996341363  ./evidence/tpct-build-artifacts.json
 8bd22603c3248868ccc923638437069d372f2cd9f49a777d886ac4c6a980908d  ./evidence/tpct-build.txt
@@ -34,7 +35,7 @@ d86089768fb3af35b05aac4f2a8b5e5313ef16da3f2081b94b38b640c2d94b43  ./LICENSE
 f9a4c6f21b5cc13990b6d72c0813815da458717b8fa2b1c45ae1dec21268871e  ./patches/global-menu-dedupe-app-menu.patch
 ad24df69877e7ee3b0671c9f790766c1c1238bd80ee8361e8ad619568f428585  ./patches/gtk4-whitesur-light-candidate.patch
 2d54482e7cdd9cadb1e302483d4924ead29f1ccc3448e274f83e3b580a3bea81  ./patches/spotlight-stage-parking.patch
-e295f4bc4e8586cacc9ac6b237bdbafd09ef3f73bc764f5c31fb225532a87a59  ./README.md
+0c0b652d909c9246fc28af7d198fded486ea2b3f58f38a071b1c67730d030737  ./README.md
 4c1b996dd613ad1a6ffbef54a0c9b48dee098dd6f4b3c2e3df3ff1e21a194b32  ./sources.py
 bbba86beb94b8b9fe03e825dd8a6492d3e6af80dcd69883c3a4f64d421ad3a5c  ./style.py
 8bcd366e515a9cd3420d0d97c61c8de00c4bb967e8098e6a287cd4a1f821c2ac  ./styles/panel-light.css

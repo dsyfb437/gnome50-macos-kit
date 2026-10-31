@@ -49,6 +49,12 @@ SETTINGS['macos-dock'] = [
  # Blur My Shell also blurs Dhruva's dock and would override the values above.
  ('org.gnome.shell.extensions.blur-my-shell.dash-to-dock',
   '/org/gnome/shell/extensions/blur-my-shell/dash-to-dock/', 'blur', 'false')]
+# Status area: monochrome tray icons and menu-bar type matched to the panel font.
+SETTINGS['status-area'] = [
+ ('org.gnome.shell.extensions.appindicator', '/org/gnome/shell/extensions/appindicator/',
+  'icon-saturation', '1.0'),
+ ('org.gnome.shell.extensions.global-menu', '/org/gnome/shell/extensions/global-menu/',
+  'menu-font-size', '11')]
 FILES = {
  'gtk3': [CONFIG / 'gtk-3.0'], 'gtk4': [CONFIG / 'gtk-4.0'],
  'themes': [HOME / '.themes', DATA / 'themes'],
