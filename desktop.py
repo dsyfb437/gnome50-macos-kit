@@ -15,7 +15,7 @@ import sys
 import tempfile
 import uuid
 
-KIT_VERSION = '1.2.0'
+KIT_VERSION = '1.3.0'
 ROOT = Path(__file__).resolve().parent
 HOME = Path.home()
 CONFIG = Path(os.environ.get('XDG_CONFIG_HOME', HOME / '.config'))
