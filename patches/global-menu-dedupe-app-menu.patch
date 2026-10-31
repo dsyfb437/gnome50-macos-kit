@@ -1,0 +1,72 @@
+--- a/nativeMenu.js	2026-10-28 06:53:40.570285600 +0800
++++ b/nativeMenu.js	2026-10-31 20:37:22.587267657 +0800
+@@ -19,6 +19,21 @@
+ 	return barNodes(nodes).length > 0;
+ }
+ 
++// Some apps (QQ, for example) draw their own application menu in the menu bar.
++// macOS shows that menu once, under the application's name, so fold a bar menu
++// whose label matches the focused app into the app-name button instead of
++// drawing a second identical button.
++export function splitBarMenus(nodes, appName) {
++	const topLevel = barNodes(nodes);
++	let appMenu = nodes.find(n => n.appMenu) ?? null;
++	if (!appMenu && appName) {
++		const duplicate = topLevel.find(n => stripMnemonic(n.label) === appName);
++		if (duplicate)
++			return {bar: topLevel.filter(n => n !== duplicate), appMenu: duplicate};
++	}
++	return {bar: topLevel, appMenu};
++}
++
+ function toOrnament(toggleType, toggleState) {
+ 	if (toggleType === 'checkmark')
+ 		return toggleState ? PopupMenu.Ornament.CHECK : PopupMenu.Ornament.NONE;
+@@ -34,6 +49,7 @@
+ 		this._onAppMenu = onAppMenu;
+ 		this._appMenuSource = null;
+ 		this._buttons = [];
++		this._appName = null;
+ 		this._shownJson = null;
+ 		this._pendingNodes = null;
+ 		this._rebuildIdleId = 0;
+@@ -43,7 +59,8 @@
+ 		return this._buttons.length > 0;
+ 	}
+ 
+-	setItems(nodes) {
++	setItems(nodes, appName = null) {
++		this._appName = appName ?? this._appName;
+ 		const json = JSON.stringify(nodes);
+ 		if (json === this._shownJson) {
+ 			if (this._pendingNodes)
+@@ -91,7 +108,7 @@
+ 
+ 	_rebuild(nodes, json = JSON.stringify(nodes)) {
+ 		this._pendingNodes = null;
+-		const topLevel = barNodes(nodes);
++		const {bar: topLevel, appMenu} = splitBarMenus(nodes, this._appName);
+ 		while (this._buttons.length > topLevel.length)
+ 			this._buttons.pop().destroy();
+ 		topLevel.forEach((node, index) => {
+@@ -108,8 +125,7 @@
+ 			}
+ 			btn.setItems(() => this._toSpecs(node.children ?? []));
+ 		});
+-		const appNode = nodes.find(n => n.appMenu);
+-		this._setAppMenu(appNode ? () => this._toSpecs(appNode.children ?? []) : null);
++		this._setAppMenu(appMenu ? () => this._toSpecs(appMenu.children ?? []) : null);
+ 		this._shownJson = json;
+ 	}
+ 
+--- a/extension.js	2026-10-28 06:53:40.570029040 +0800
++++ b/extension.js	2026-10-31 20:37:22.588205661 +0800
+@@ -89,7 +89,7 @@
+ 	setMenuTree(items) {
+ 		if (this._blank)
+ 			return;
+-		this._native.setItems(items);
++		this._native.setItems(items, this._winTracker.focus_app?.get_name() ?? null);
+ 		if (hasBarMenus(items)) {
+ 			this._shortcuts.setMapping(null);
+ 			this._fallback?.setNativeMenusPresent(true);

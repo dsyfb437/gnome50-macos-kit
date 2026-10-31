@@ -1,0 +1,12 @@
+/* Local additions, applied to a copy of the user's WhiteSur Shell theme. */
+#panel, #panel .panel-button { color: #202124; text-shadow: none; }
+#panel .panel-button:hover, #panel .panel-button:active,
+#panel .panel-button:focus, #panel .panel-button:checked {
+  color: #111111; text-shadow: none;
+}
+#panel .panel-button StLabel { text-shadow: none !important; }
+#panel .panel-button StIcon, #panel .system-status-icon {
+  color: #202124 !important; icon-shadow: none !important;
+}
+#panel:overview, #panel:overview .panel-button,
+#panel:overview .panel-button StIcon { color: white !important; }

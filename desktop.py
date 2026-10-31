@@ -32,10 +32,23 @@ SETTINGS = {
  'font': [(I, IP, 'font-name', "'Inter 11'")],
  'buttons': [('org.gnome.desktop.wm.preferences', '/org/gnome/desktop/wm/preferences/',
               'button-layout', "'close,minimize,maximize:'")],
- 'shell-theme': [('org.gnome.shell.extensions.user-theme', '/org/gnome/shell/extensions/user-theme/', 'name', "'WhiteSur-Light'")],
+ 'shell-theme': [('org.gnome.shell.extensions.user-theme', '/org/gnome/shell/extensions/user-theme/',
+                 'name', "'WhiteSur-MacOS-33ce5241ece02d81'")],
  'panel-blur': [('org.gnome.shell.extensions.blur-my-shell.panel', '/org/gnome/shell/extensions/blur-my-shell/panel/', 'blur', 'true'),
                 ('org.gnome.shell.extensions.blur-my-shell.overview', '/org/gnome/shell/extensions/blur-my-shell/overview/', 'blur', 'false')],
 }
+# Visual modules do not change animation, scaling, favorites or shortcuts.
+SETTINGS['macos-dock'] = [
+ ('org.gnome.shell.extensions.dhruva', '/org/gnome/shell/extensions/dhruva/', key, value)
+ for key, value in [('blur-enabled', 'true'), ('blur-mode', "'dynamic'"),
+                    ('blur-intensity', '30.0'), ('blur-vibrancy', '0.65000000000000002'),
+                    ('blur-brightness', '0.90000000000000002'), ('blur-tint-color', "'#FFFFFF'"),
+                    ('blur-tint-opacity', '0.59999999999999998'), ('grid-icon-color', "'#303034'"),
+                    ('indicator-color', "'#303034'"), ('separator-color', "'#303034'"),
+                    ('running-separator-color', "'#303034'")]] + [
+ # Blur My Shell also blurs Dhruva's dock and would override the values above.
+ ('org.gnome.shell.extensions.blur-my-shell.dash-to-dock',
+  '/org/gnome/shell/extensions/blur-my-shell/dash-to-dock/', 'blur', 'false')]
 FILES = {
  'gtk3': [CONFIG / 'gtk-3.0'], 'gtk4': [CONFIG / 'gtk-4.0'],
  'themes': [HOME / '.themes', DATA / 'themes'],
@@ -169,7 +182,7 @@ def get_modules(args, allowed):
         raise RuntimeError(f'Invalid/duplicate module; allowed: {", ".join(allowed)}')
     # extension-settings already contains shell-theme and panel-blur paths.
     if 'extension-settings' in names:
-        names = [n for n in names if n not in ['shell-theme', 'panel-blur']]
+        names = [n for n in names if n not in SETTINGS or not all(path.startswith(TREE) for _, path, _, _ in SETTINGS[n])]
     return names
 
 

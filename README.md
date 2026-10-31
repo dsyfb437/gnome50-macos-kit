@@ -4,12 +4,14 @@
 
 这是当前桌面的整合与修复记录，不是空白机器的一键安装器。**仓库中的脚本不会自动重做已经应用的源码补丁、安装菜单组件或创建 Rime 组。**
 
+新增：[外观优化与回滚](docs/外观优化.md)。顶栏文字和系统图标已截图验收；Dock 已改为浅色磨砂（根因是 Blur My Shell 覆盖 Dhruva 模糊）；QQ 同名菜单的去重补丁已写入扩展源码，需下次登录生效，尚未做实际画面复验。
+
 ## 当前方案
 
 | 部分 | 保留的配置 |
 |---|---|
-| 外观 | WhiteSur Light GTK3 / GTK4 / Shell、WhiteSur 图标和光标、Inter 11 |
-| Dock 与缩放 | Dhruva，自定义 GenieEffect.js 保留；显示缩放 166% |
+| 外观 | WhiteSur Light GTK3 / GTK4、独立 WhiteSur-MacOS Shell 变体、WhiteSur 图标和光标、Inter 11 |
+| Dock 与缩放 | Dhruva，自定义 GenieEffect.js 保留；浅色磨砂 Dock（`macos-dock` 模块）；显示缩放 166% |
 | 顶栏与菜单 | Just Perfection、Blur My Shell（顶栏模糊开、概览模糊关）、Orbit 全局菜单 |
 | 搜索 | Spotlight 保持开启，已应用生命周期补丁 |
 | 输入与辅助 | Fcitx5、Kimpanel、Clipboard Indicator、Sushi、WACK Sonoma；新增 Rime（雾凇）可选组，当前输入法未替换 |
@@ -22,11 +24,11 @@
 | 项目 | 已完成 | 尚待验证 |
 |---|---|---|
 | GTK4 | 修复 8 处样式语法错误；当前文件解析错误为 0 | 各应用浅深色、标题栏、弹窗与 libadwaita 视觉一致性 |
-| Orbit | 补齐用户级 daemon 与按应用启用的传统 GTK3 菜单模块；两类真实应用菜单动作回传通过 | 日常应用覆盖、实际顶栏点击、Snap / Flatpak 等场景 |
+| Orbit | 补齐用户级 daemon 与按应用启用的传统 GTK3 菜单模块；两类真实应用菜单动作回传通过；同名应用菜单去重补丁已暂存 | 日常应用覆盖、实际顶栏点击、Snap / Flatpak 等场景；重新登录后复验 QQ 顶栏 |
 | Spotlight | 补丁在新会话加载且保持开启；5 轮概览切换 10/10 成功，相关警告 0 条 | 搜索输入、选择结果、Esc / 点击外部关闭、长期流畅性 |
 | Dhruva | 原有自定义补丁哈希一致，未被覆盖 | 166% 下动画落点、手势、多屏和帧率 |
 | Rime | 新增可选组，保留原组、词库和当前拼音 | 中文输入及候选窗交互 |
-| 工具与上游 | 17 项隔离集成测试通过；六个上游已审阅并锁定提交 | 不把 metadata 的 GNOME 50 声明等同于视觉兼容 |
+| 工具与上游 | 17 项隔离集成测试、5 项主题工具测试、9 项菜单去重测试通过；六个上游已审阅并锁定提交 | 不把 metadata 的 GNOME 50 声明等同于视觉兼容 |
 
 完整结论与证据见 [验证结果](docs/验证结果.md)。
 
@@ -59,6 +61,7 @@ python3 desktop.py apply --module panel-blur --dry-run
 
 ## 目录与范围
 
+- `style.py`、`styles/`：从现有主题生成独立顶栏变体，默认干运行。
 - `desktop.py`：状态检查、可选设置、备份和恢复。
 - `sources.py`、`upstreams.lock.json`：固定提交的源码获取及校验，不执行上游安装器。
 - `verify-after-login.py`：检查 Spotlight 补丁加载条件；`--exercise` 执行概览开关测试。
