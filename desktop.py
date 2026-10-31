@@ -40,13 +40,13 @@ SETTINGS = {
 # Visual modules do not change animation, scaling, favorites or shortcuts.
 SETTINGS['macos-dock'] = [
  ('org.gnome.shell.extensions.dhruva', '/org/gnome/shell/extensions/dhruva/', key, value)
- for key, value in [('blur-enabled', 'true'), ('blur-mode', "'dynamic'"),
-                    ('blur-intensity', '30.0'), ('blur-vibrancy', '0.65000000000000002'),
-                    ('blur-brightness', '0.90000000000000002'), ('blur-tint-color', "'#FFFFFF'"),
-                    ('blur-tint-opacity', '0.59999999999999998'), ('grid-icon-color', "'#303034'"),
-                    ('indicator-color', "'#303034'"), ('separator-color', "'#303034'"),
-                    ('running-separator-color', "'#303034'")]] + [
- # Blur My Shell also blurs Dhruva's dock and would override the values above.
+ for key, value in [('blur-enabled', 'false'),
+                    ('background-color', "'#F1EDE7'"), ('background-opacity', '78'),
+                    ('stroke-color', "'#FFFFFF'"), ('stroke-opacity', '30'),
+                    ('grid-icon-color', "'#303034'"), ('indicator-color', "'#303034'"),
+                    ('separator-color', "'#303034'"), ('running-separator-color', "'#303034'")]] + [
+ # Real-time dock blur measured ~17% of one core here, and Blur My Shell would
+ # override the Dhruva values, so both blur paths stay off.
  ('org.gnome.shell.extensions.blur-my-shell.dash-to-dock',
   '/org/gnome/shell/extensions/blur-my-shell/dash-to-dock/', 'blur', 'false')]
 # Status area: monochrome tray icons and menu-bar type matched to the panel font.
