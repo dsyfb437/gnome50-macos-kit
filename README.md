@@ -36,7 +36,7 @@
 
 ## 安装、验证与发布
 
-当前版本 **1.0.0**。`install` 按固定顺序应用视觉配置模块，写入前自动备份；默认只显示与当前配置的差异，不会改桌面。
+当前版本 **1.0.1**。`install` 按固定顺序应用视觉配置模块，写入前自动备份；默认只显示与当前配置的差异，不会改桌面。
 
 ```bash
 python3 desktop.py install --dry-run     # 查看差异，不写入
@@ -51,7 +51,7 @@ python3 desktop.py --version
 
 ```bash
 tools/build-release.sh
-# dist/gnome50-macos-kit-1.0.0.tar.gz 和 .sha256
+# dist/gnome50-macos-kit-1.0.1.tar.gz 和 .sha256
 ```
 
 ## 从这里开始
