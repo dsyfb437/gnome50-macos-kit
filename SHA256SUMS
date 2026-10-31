@@ -45,7 +45,7 @@ d86089768fb3af35b05aac4f2a8b5e5313ef16da3f2081b94b38b640c2d94b43  ./LICENSE
 f9a4c6f21b5cc13990b6d72c0813815da458717b8fa2b1c45ae1dec21268871e  ./patches/global-menu-dedupe-app-menu.patch
 ad24df69877e7ee3b0671c9f790766c1c1238bd80ee8361e8ad619568f428585  ./patches/gtk4-whitesur-light-candidate.patch
 2d54482e7cdd9cadb1e302483d4924ead29f1ccc3448e274f83e3b580a3bea81  ./patches/spotlight-stage-parking.patch
-09ec9d9ec70f40eae8250c1280397bcdc114706788a168b61997b40d67f085aa  ./README.md
+f478ed227c1f404b3d4dd15c1dca40e8002f5d1d8bae57622dff0bcc12c58d0b  ./README.md
 4c1b996dd613ad1a6ffbef54a0c9b48dee098dd6f4b3c2e3df3ff1e21a194b32  ./sources.py
 bbba86beb94b8b9fe03e825dd8a6492d3e6af80dcd69883c3a4f64d421ad3a5c  ./style.py
 8bcd366e515a9cd3420d0d97c61c8de00c4bb967e8098e6a287cd4a1f821c2ac  ./styles/panel-light.css

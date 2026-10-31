@@ -15,7 +15,7 @@
 | 顶栏与菜单 | Just Perfection、Blur My Shell（顶栏模糊开、概览模糊关）、Orbit 全局菜单；托盘图标灰度、菜单字号 11 |
 | 搜索 | Spotlight 保持开启，已应用生命周期补丁 |
 | 输入与辅助 | Fcitx5、Kimpanel、Clipboard Indicator、Sushi、WACK Sonoma；新增 Rime（雾凇）可选组，当前输入法未替换 |
-| 窗口标题 | Window Title Pro 已安装但在核验时未启用，未发现与 Orbit 同时显示的重复标题 |
+| 窗口标题 | 未启用的 Window Title Pro 已卸载；Orbit 的应用名/菜单去重已生效 |
 
 主要桌面测试于 **2026-10-28** 完成；2026-10-29 补齐浅色偏好并修正检查工具，见验证结果。后续本机改动需重新运行状态检查。
 
