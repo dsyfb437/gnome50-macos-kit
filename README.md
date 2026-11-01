@@ -154,7 +154,7 @@ python3 desktop.py backup --module all --execute
 python3 desktop.py                 # 当前状态、扩展、冲突提示（JSON）
 python3 desktop.py doctor          # 前置检查
 python3 desktop.py verify          # 验收，失败返回 1
-python3 tests/test_desktop.py      # 23 项隔离测试
+python3 tests/test_desktop.py      # 24 项隔离测试
 python3 tests/test_style.py        # 主题生成工具测试
 node tests/test_menu_dedupe.cjs    # 菜单去重测试
 node tests/test_native_menu_dedupe.cjs
@@ -166,19 +166,19 @@ node tests/test_spotlight_lifecycle.cjs
 ## 目录
 
 ```text
-install.sh                  一键入口（bootstrap 包装）
-desktop.py                  状态/doctor/install/apply/verify/backup/restore/bootstrap
-style.py, styles/           生成 WhiteSur-MacOS Shell 变体
-profiles/                   限定环境的 bootstrap profile
-patches/                    手工补丁
+install.sh                  一键入口（薄包装；运行时）
+desktop.py                  核心：状态/doctor/install/apply/verify/backup/restore/bootstrap（运行时）
+style.py, styles/           生成 WhiteSur-MacOS Shell 变体；styles/panel-light.css 是唯一的主题覆盖源
+profiles/                   限定环境的 bootstrap profile（运行时数据）
+patches/                    手工补丁（不自动应用）
 data/menu-zh.json           菜单中文标签表
 data/spotlight-patch-manifest.json  Spotlight 补丁校验清单
-tools/localize-menus.py     菜单本地化
-tools/login-report.sh       登录/指纹/钥匙串只读诊断
-tools/build-release.sh      构建发布包
+tools/localize-menus.py     菜单本地化（可选）
+tools/login-report.sh       登录/指纹/钥匙串只读诊断（可选）
+tools/build-release.sh      本地离线打包（可选）
 sources.py, upstreams.lock.json  固定上游提交与校验
 verify-after-login.py       Spotlight 补丁加载检查
-tests/                      隔离测试
+tests/                      隔离测试与 profile 契约检查（开发用）
 ```
 
 ## 边界与已知限制

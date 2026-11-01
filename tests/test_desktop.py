@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Runs only inside an isolated HOME + D-Bus. Does not use the user's dconf."""
+import ast
 import json
 import os
 from pathlib import Path
@@ -289,6 +290,20 @@ class DesktopTests(unittest.TestCase):
         self.assertNotEqual(p.returncode, 0)
         self.assertIn('modules', p.stderr)
         self.assertEqual(before, after)
+
+
+    def test_24_profile_contract_matches_code(self):
+        sys.path.insert(0, str(KIT))
+        try:
+            import desktop
+        finally:
+            sys.path.pop(0)
+        profile = json.loads((KIT / 'profiles/ubuntu-26.04-gnome-50.json').read_text())
+        self.assertEqual(profile['modules'], desktop.INSTALL_MODULES)
+        self.assertEqual(set(profile['extensions']), set(desktop.REQUIRED_EXTENSIONS))
+        self.assertEqual(profile['target']['shell_theme'],
+                         ast.literal_eval(desktop.SETTINGS['shell-theme'][0][3]))
+        self.assertEqual(profile['target']['session_types'], ['wayland'])
 
 
 if __name__ == '__main__':
