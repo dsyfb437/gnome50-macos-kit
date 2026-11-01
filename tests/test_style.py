@@ -21,7 +21,8 @@ class StyleTests(unittest.TestCase):
         style.d.HOME = self.old_home
         self.tmp.cleanup()
     def test_plan_does_not_write(self):
-        style.plan(self.source, self.overlay)
+        _, _, _, name, _ = style.plan(self.source, self.overlay)
+        self.assertEqual(name, 'WhiteSur-MacOS-Kit')
         self.assertFalse((self.root / '.themes').exists())
     def test_build_preserves_source_and_reuses_exact_copy(self):
         src, inv, css, name, dest = style.plan(self.source, self.overlay)
@@ -31,13 +32,21 @@ class StyleTests(unittest.TestCase):
         self.assertEqual(style.d.digest(dest), before)
         self.assertEqual(style.d.digest(src), inv)
         self.assertIn(css, (dest / 'gnome-shell/gnome-shell.css').read_bytes())
-    def test_refuse_modified_destination(self):
+    def test_refuse_unmanaged_destination(self):
+        src, inv, css, name, dest = style.plan(self.source, self.overlay)
+        (dest / 'gnome-shell').mkdir(parents=True)
+        (dest / 'gnome-shell/gnome-shell.css').write_text('user theme')
+        with self.assertRaises(RuntimeError): style.build(src, inv, css, dest)
+        self.assertEqual((dest / 'gnome-shell/gnome-shell.css').read_text(), 'user theme')
+
+    def test_replace_managed_destination(self):
         src, inv, css, name, dest = style.plan(self.source, self.overlay)
         style.build(src, inv, css, dest)
         f = dest / 'gnome-shell/gnome-shell.css'
         f.write_text('user edit')
-        with self.assertRaises(RuntimeError): style.build(src, inv, css, dest)
-        self.assertEqual(f.read_text(), 'user edit')
+        style.build(src, inv, css, dest)
+        self.assertIn(css, f.read_bytes())
+        self.assertTrue((dest / '.gnome50-macos-kit').is_file())
     def test_refuse_external_and_absolute_links(self):
         p = self.source / 'link'
         p.symlink_to('../overlay.css')

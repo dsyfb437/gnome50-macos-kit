@@ -6,6 +6,8 @@ Ubuntu 26.04.1 / GNOME Shell 50.1 的 macOS 风格桌面 bootstrap。只面向**
 
 当前版本：**1.5.0**。
 
+A scoped, reviewable bootstrap for a macOS-style Ubuntu 26.04 / GNOME Shell 50.1 desktop. It assumes WhiteSur, Dhruva and Orbit are already installed; it is not a universal one-click macOS installer.
+
 ## 一键入口
 
 ```bash
@@ -40,7 +42,7 @@ python3 desktop.py bootstrap --execute --no-snapshot --profile profiles/ubuntu-2
 - Ubuntu 26.04.x、GNOME Shell 50.x、Wayland；
 - WhiteSur GTK3 / GTK4 / Shell 主题、WhiteSur 图标和光标、Inter 字体；
 - 扩展：User Themes、Blur My Shell、Dhruva、Orbit Global Menu、Just Perfection、Ubuntu AppIndicators、Spotlight；
-- 已生成 `WhiteSur-MacOS-<hash>` Shell 主题（见下方“手工步骤”）；
+- 已生成 `WhiteSur-MacOS-Kit` Shell 主题（见下方“手工步骤”）；
 - Python 3.10+、`gsettings`、`dconf`、`gnome-extensions`、`fc-match`；
 - 以普通用户运行，不要用 sudo。
 
@@ -72,7 +74,7 @@ python3 desktop.py doctor
 | `panel-blur` | 顶栏模糊开、概览模糊关 |
 | `status-area` | 托盘灰度、全局菜单字号 11、面板指示器间距 6 |
 | `macos-dock` | Dhruva 浅色半透明 Dock、关闭实时模糊、BMS dock 模糊关闭 |
-| `shell-theme` | 选中生成的 `WhiteSur-MacOS-<hash>` Shell 主题 |
+| `shell-theme` | 选中生成的 `WhiteSur-MacOS-Kit` Shell 主题 |
 
 `apply` 可以单独应用某个模块；`install` 按固定顺序应用全部视觉模块。两者默认 dry-run。
 
@@ -94,7 +96,7 @@ python3 desktop.py doctor
 python3 style.py --execute
 ```
 
-它从现有 WhiteSur Shell 主题复制一份，追加 `styles/panel-light.css`，输出到 `~/.themes/WhiteSur-MacOS-<hash>`。profile 里的 `target.shell_theme` 必须和生成目录名一致；如果改了 `styles/panel-light.css`，hash 会变，需要同步改 profile。
+它从现有 WhiteSur Shell 主题复制一份，追加 `styles/panel-light.css`，输出到 `~/.themes/WhiteSur-MacOS-Kit`。profile 里的 `target.shell_theme` 必须和生成目录名一致。主题名固定为 `WhiteSur-MacOS-Kit`；改 `styles/panel-light.css` 不需要改 profile。
 
 ### 2. 应用补丁
 
@@ -154,11 +156,9 @@ python3 desktop.py backup --module all --execute
 python3 desktop.py                 # 当前状态、扩展、冲突提示（JSON）
 python3 desktop.py doctor          # 前置检查
 python3 desktop.py verify          # 验收，失败返回 1
-python3 tests/test_desktop.py      # 24 项隔离测试
-python3 tests/test_style.py        # 主题生成工具测试
-node tests/test_menu_dedupe.cjs    # 菜单去重测试
-node tests/test_native_menu_dedupe.cjs
-node tests/test_spotlight_lifecycle.cjs
+python3 tests/test_desktop.py      # 24 项隔离测试，不需要真实桌面
+python3 tests/test_style.py        # 6 项主题生成工具测试
+tests/run-extension-tests.sh       # 可选：对已安装的 global-menu/Spotlight 源码跑集成测试
 ```
 
 `verify` 检查会话总线、GNOME 50、配置目标、必需扩展、生成主题、Spotlight 补丁、菜单去重补丁，以及 Ptyxis / VS Code 启动项是否仍导出 `GTK_THEME`。
@@ -168,7 +168,7 @@ node tests/test_spotlight_lifecycle.cjs
 ```text
 install.sh                  一键入口（薄包装；运行时）
 desktop.py                  核心：状态/doctor/install/apply/verify/backup/restore/bootstrap（运行时）
-style.py, styles/           生成 WhiteSur-MacOS Shell 变体；styles/panel-light.css 是唯一的主题覆盖源
+style.py, styles/           生成 WhiteSur-MacOS-Kit Shell 变体；styles/panel-light.css 是唯一的主题覆盖源
 profiles/                   限定环境的 bootstrap profile（运行时数据）
 patches/                    手工补丁（不自动应用）
 data/menu-zh.json           菜单中文标签表
@@ -178,7 +178,7 @@ tools/login-report.sh       登录/指纹/钥匙串只读诊断（可选）
 tools/build-release.sh      本地离线打包（可选）
 sources.py, upstreams.lock.json  固定上游提交与校验
 verify-after-login.py       Spotlight 补丁加载检查
-tests/                      隔离测试与 profile 契约检查（开发用）
+tests/                      隔离测试与 profile 契约检查；run-extension-tests.sh 需要已安装扩展源码
 ```
 
 ## 边界与已知限制

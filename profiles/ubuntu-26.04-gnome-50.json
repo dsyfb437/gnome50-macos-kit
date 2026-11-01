@@ -7,7 +7,7 @@
     "os_version": "26.04",
     "gnome_prefix": "GNOME Shell 50.",
     "session_types": ["wayland"],
-    "shell_theme": "WhiteSur-MacOS-33ce5241ece02d81"
+    "shell_theme": "WhiteSur-MacOS-Kit"
   },
   "modules": [
     "appearance",

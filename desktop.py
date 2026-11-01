@@ -34,7 +34,7 @@ SETTINGS = {
  'buttons': [('org.gnome.desktop.wm.preferences', '/org/gnome/desktop/wm/preferences/',
               'button-layout', "'close,minimize,maximize:'")],
  'shell-theme': [('org.gnome.shell.extensions.user-theme', '/org/gnome/shell/extensions/user-theme/',
-                 'name', "'WhiteSur-MacOS-33ce5241ece02d81'")],
+                 'name', "'WhiteSur-MacOS-Kit'")],
  'panel-blur': [('org.gnome.shell.extensions.blur-my-shell.panel', '/org/gnome/shell/extensions/blur-my-shell/panel/', 'blur', 'true'),
                 ('org.gnome.shell.extensions.blur-my-shell.overview', '/org/gnome/shell/extensions/blur-my-shell/overview/', 'blur', 'false')],
 }
