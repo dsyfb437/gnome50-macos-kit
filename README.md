@@ -10,7 +10,7 @@
 
 ![Desktop preview](assets/desktop-preview-v2.webp)
 
-> 截图：Text Editor、Files、Terminal；Chrome 不在画面内。
+> Ubuntu 26.04.1 / GNOME Shell 50.1 · WhiteSur Light + Dhruva + Orbit。
 
 ## 开始前
 
