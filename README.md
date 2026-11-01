@@ -4,7 +4,7 @@
 
 这是当前桌面的整合与修复记录，不是空白机器的一键安装器。**仓库中的脚本不会自动重做已经应用的源码补丁、安装菜单组件或创建 Rime 组。**
 
-新增：[中文菜单](docs/中文菜单.md)（Chrome/Files/Terminal 顶栏已中文；应用菜单白点已用更具体选择器覆盖，待点开确认）；[外观优化与回滚](docs/外观优化.md)。顶栏文字和系统图标已截图验收；Dock 已改为浅色半透明（实时模糊实测占 15%+ 单核，已关闭）；托盘图标已转灰度并与面板字号对齐；QQ 同名菜单去重已在重启后的会话中截图验证。
+新增：[Bootstrap](docs/bootstrap.md)（限定 Ubuntu 26.04 / GNOME 50，先检查再应用，失败自动恢复配置）；[中文菜单](docs/中文菜单.md)（Chrome/Files/Terminal 顶栏已中文；应用菜单白点已用更具体选择器覆盖，待点开确认）；[外观优化与回滚](docs/外观优化.md)。顶栏文字和系统图标已截图验收；Dock 已改为浅色半透明（实时模糊实测占 15%+ 单核，已关闭）；托盘图标已转灰度并与面板字号对齐；QQ 同名菜单去重已在重启后的会话中截图验证。
 
 ## 当前方案
 
@@ -37,7 +37,7 @@
 
 ## 安装、验证与发布
 
-当前版本 **1.3.1**。`doctor` 做离线前置检查（主题、图标、字体、扩展、schema、生成的主题），`install` 按固定顺序应用视觉配置模块，写入前自动备份；默认只显示差异，不会改桌面。
+当前版本 **1.4.0**。`doctor` 做离线前置检查（主题、图标、字体、扩展、schema、生成的主题），`install` 按固定顺序应用视觉配置模块，写入前自动备份；默认只显示差异，不会改桌面。`bootstrap` 在已知环境上把 preflight、配置应用、验收和回滚报告串起来。
 
 ```bash
 python3 desktop.py doctor                # 新机器先确认依赖齐全（缺失项带提示）
@@ -45,6 +45,12 @@ python3 desktop.py install --dry-run     # 查看差异，不写入
 python3 desktop.py install --execute     # 备份后应用视觉配置
 python3 desktop.py verify                # 只读验收，失败时返回 1
 python3 desktop.py --version
+
+# 已知环境的 bootstrap：先 dry-run，再明确执行
+python3 desktop.py bootstrap --dry-run
+python3 desktop.py bootstrap --execute --snapshot-ok   # 已有系统快照
+# 没有 Timeshift/Snapper 时，显式接受只做用户级配置备份：
+python3 desktop.py bootstrap --execute --no-snapshot
 ```
 
 `doctor` 只做离线检查并列出缺失项及提示；`verify` 则在运行中的会话里检查配置目标、扩展、Shell 主题、Spotlight 补丁、菜单去重补丁，以及 Ptyxis / VS Code 启动项是否仍导出 `GTK_THEME`，输出 JSON。
@@ -53,7 +59,7 @@ python3 desktop.py --version
 
 ```bash
 tools/build-release.sh
-# dist/gnome50-macos-kit-1.3.1.tar.gz 和 .sha256
+# dist/gnome50-macos-kit-1.4.0.tar.gz 和 .sha256
 ```
 
 ## 从这里开始
@@ -79,6 +85,7 @@ python3 desktop.py apply --module panel-blur --dry-run
 |---|---|
 | 查看已经做了什么、哪些尚未验证 | [验证结果](docs/验证结果.md) |
 | 查参数、模块、备份、恢复及固定源码获取 | [使用与恢复](docs/使用与恢复.md) |
+| 已知环境一键 bootstrap、报告与回滚 | [Bootstrap](docs/bootstrap.md) |
 | 实际检查动画、主题、输入和菜单 | [本机验收](docs/本机验收.md) |
 | 登录慢、指纹后还要密码 | [登录与指纹](docs/登录与指纹.md) |
 | 新增扩展与回滚 | [额外扩展](docs/额外扩展.md) |
@@ -91,7 +98,8 @@ python3 desktop.py apply --module panel-blur --dry-run
 ## 目录与范围
 
 - `style.py`、`styles/`：从现有主题生成独立顶栏变体，默认干运行。
-- `desktop.py`：状态检查、可选设置、备份和恢复。
+- `desktop.py`：状态检查、可选设置、bootstrap、备份和恢复。
+- `profiles/`：限定环境的 bootstrap profile；不是通用安装清单。
 - `sources.py`、`upstreams.lock.json`：固定提交的源码获取及校验，不执行上游安装器。
 - `verify-after-login.py`：检查 Spotlight 补丁加载条件；`--exercise` 执行概览开关测试。
 - `patches/`：已应用修复的补丁，供审阅；不自动打补丁。

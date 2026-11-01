@@ -15,7 +15,7 @@ import sys
 import tempfile
 import uuid
 
-KIT_VERSION = '1.3.1'
+KIT_VERSION = '1.4.0'
 ROOT = Path(__file__).resolve().parent
 HOME = Path.home()
 CONFIG = Path(os.environ.get('XDG_CONFIG_HOME', HOME / '.config'))
@@ -86,6 +86,10 @@ REQUIRED_EXTENSIONS = {
  'ubuntu-appindicators@ubuntu.com': 'status-area',
  'spotlight@nin': 'search lifecycle patch',
 }
+
+PROFILES = ROOT / 'profiles'
+DEFAULT_PROFILE = PROFILES / 'ubuntu-26.04-gnome-50.json'
+BOOTSTRAP_REPORTS = STATE / 'bootstrap-reports'
 
 
 def run(*args, optional=False):
@@ -470,8 +474,8 @@ def _enabled_extensions():
         return []
 
 
-def verify():
-    """Read-only acceptance check. Returns 0 when every check passes."""
+def verify_report():
+    """Build the read-only acceptance report without printing."""
     checks = []
 
     def check(name, fn):
@@ -560,8 +564,322 @@ def verify():
               'ok': all(c['ok'] for c in checks),
               'checks': checks,
               'warnings': state.get('status', {}).get('warnings', [])}
+    return report
+
+
+def verify():
+    report = verify_report()
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0 if report['ok'] else 1
+
+
+def _os_release():
+    data = {}
+    try:
+        for line in Path('/etc/os-release').read_text().splitlines():
+            if '=' in line:
+                key, value = line.split('=', 1)
+                data[key] = value.strip().strip('"')
+    except OSError as exc:
+        raise RuntimeError(f'Cannot read /etc/os-release: {exc}') from exc
+    return data
+
+
+def load_profile(path):
+    """Load and validate a bootstrap profile. Read-only."""
+    path = Path(path).expanduser()
+    if not path.is_absolute():
+        path = ROOT / path
+    try:
+        data = json.loads(path.read_text())
+    except (OSError, ValueError) as exc:
+        raise RuntimeError(f'Cannot read profile {path}: {exc}') from exc
+    if not isinstance(data, dict) or data.get('format') != 1:
+        raise RuntimeError(f'Unsupported profile format: {path}')
+    if not isinstance(data.get('name'), str) or not data['name']:
+        raise RuntimeError('Profile name is required')
+    target = data.get('target')
+    if not isinstance(target, dict):
+        raise RuntimeError('Profile target is required')
+    for key in ('os_id', 'os_version', 'gnome_prefix', 'shell_theme'):
+        if not isinstance(target.get(key), str) or not target[key]:
+            raise RuntimeError(f'Profile target.{key} is required')
+    sessions = target.get('session_types')
+    if not isinstance(sessions, list) or not sessions or not all(isinstance(x, str) for x in sessions):
+        raise RuntimeError('Profile target.session_types must be a non-empty list')
+    modules = data.get('modules')
+    if not isinstance(modules, list) or not modules or any(m not in INSTALL_MODULES for m in modules):
+        raise RuntimeError(f'Profile modules must be a subset of: {", ".join(INSTALL_MODULES)}')
+    if len(set(modules)) != len(modules):
+        raise RuntimeError('Profile modules contain duplicates')
+    extensions = data.get('extensions')
+    if not isinstance(extensions, dict) or not extensions or not all(
+            isinstance(k, str) and isinstance(v, str) for k, v in extensions.items()):
+        raise RuntimeError('Profile extensions must map UUID to a role string')
+    patches = data.get('patches', [])
+    if not isinstance(patches, list):
+        raise RuntimeError('Profile patches must be a list')
+    known = {'spotlight', 'menu-dedupe', 'menu-arrow-css'}
+    for patch in patches:
+        if not isinstance(patch, dict) or not isinstance(patch.get('name'), str) or patch.get('check') not in known:
+            raise RuntimeError(f'Unknown patch entry: {patch!r}')
+    packages = data.get('packages', [])
+    if not isinstance(packages, list) or not all(isinstance(x, str) for x in packages):
+        raise RuntimeError('Profile packages must be a list of strings')
+    return data
+
+
+def _extension_meta(uuid):
+    for root in (DATA / 'gnome-shell/extensions', Path('/usr/share/gnome-shell/extensions')):
+        meta = root / uuid / 'metadata.json'
+        if meta.is_file():
+            try:
+                return json.loads(meta.read_text())
+            except (OSError, ValueError):
+                return None
+    return None
+
+
+def _check_patch(name):
+    if name == 'spotlight':
+        proc = subprocess.run([sys.executable, str(ROOT / 'verify-after-login.py')],
+                              text=True, capture_output=True, timeout=60)
+        try:
+            data = json.loads(proc.stdout)
+        except ValueError as exc:
+            raise RuntimeError('Spotlight check did not return JSON: ' + (proc.stderr.strip() or proc.stdout.strip() or str(exc))) from exc
+        if not data.get('patched_files_match'):
+            raise RuntimeError('Spotlight patched files changed')
+        if not data.get('spotlight_active'):
+            raise RuntimeError('Spotlight is not active')
+        return 'patched files match; Spotlight active'
+    if name == 'menu-dedupe':
+        ext = DATA / 'gnome-shell/extensions/global-menu@unmade.space'
+        try:
+            native = (ext / 'nativeMenu.js').read_text()
+            install = (ext / 'extension.js').read_text()
+        except OSError as exc:
+            raise RuntimeError(f'global-menu extension not installed: {exc}') from exc
+        if 'splitBarMenus' not in native or 'setItems(items, this._winTracker.focus_app' not in install:
+            raise RuntimeError('global-menu dedupe patch is missing')
+        return 'dedupe patch present'
+    if name == 'menu-arrow-css':
+        path = DATA / 'gnome-shell/extensions/global-menu@unmade.space/stylesheet.css'
+        try:
+            text = path.read_text()
+        except OSError as exc:
+            raise RuntimeError(f'global-menu stylesheet missing: {exc}') from exc
+        if '.popup-menu-boxpointer.global-menu-no-arrow' not in text or '-arrow-base: 0px' not in text:
+            raise RuntimeError('global-menu arrow CSS fix is missing')
+        return 'specific no-arrow selector present'
+    raise RuntimeError(f'Unknown patch check: {name}')
+
+
+def _bootstrap_checks(profile):
+    checks = []
+    target = profile['target']
+
+    def add(name, fn, hint=None):
+        try:
+            row = {'name': name, 'ok': True, 'detail': fn()}
+        except (RuntimeError, OSError, ValueError, KeyError, TypeError,
+                subprocess.SubprocessError, json.JSONDecodeError) as exc:
+            row = {'name': name, 'ok': False, 'detail': str(exc)}
+            if hint:
+                row['hint'] = hint
+        checks.append(row)
+
+    def non_root():
+        if os.geteuid() == 0:
+            raise RuntimeError('Do not run as root or with sudo')
+        return 'user session'
+
+    def os_check():
+        data = _os_release()
+        if data.get('ID') != target['os_id']:
+            raise RuntimeError(f"expected {target['os_id']}, got {data.get('ID')}")
+        if not str(data.get('VERSION_ID', '')).startswith(target['os_version']):
+            raise RuntimeError(f"expected {target['os_version']}, got {data.get('VERSION_ID')}")
+        return f"{data.get('PRETTY_NAME', data.get('ID'))} ({data.get('VERSION_ID')})"
+
+    def gnome_check():
+        version = run('gnome-shell', '--version', optional=True) or ''
+        if not version.startswith(target['gnome_prefix']):
+            raise RuntimeError(f"expected {target['gnome_prefix']}x, got {version or 'unknown'}")
+        return version
+
+    def session_check():
+        kind = os.environ.get('XDG_SESSION_TYPE', '')
+        if kind not in target['session_types']:
+            raise RuntimeError(f"expected session {target['session_types']}, got {kind or 'unknown'}")
+        return kind
+
+    def doctor_check():
+        proc = subprocess.run([sys.executable, str(ROOT / 'desktop.py'), 'doctor'],
+                              text=True, capture_output=True, timeout=120)
+        try:
+            data = json.loads(proc.stdout)
+        except ValueError as exc:
+            raise RuntimeError('doctor did not return JSON: ' + (proc.stderr.strip() or proc.stdout.strip() or str(exc))) from exc
+        if not data.get('ok'):
+            raise RuntimeError('doctor missing: ' + ', '.join(data.get('missing', [])[:8]))
+        return f"{len(data.get('checks', []))} doctor checks passed"
+
+    def settings_check():
+        preflight(profile['modules'])
+        return f"{len(profile['modules'])} modules are writable"
+
+    def theme_check():
+        name = target['shell_theme']
+        for root in (HOME / '.themes', DATA / 'themes'):
+            path = root / name / 'gnome-shell/gnome-shell.css'
+            if path.is_file():
+                return str(path)
+        raise RuntimeError(f'generated theme {name!r} is missing; run style.py --execute first')
+
+    def snapshot_tool():
+        tools = [name for name in ('timeshift', 'snapper') if shutil.which(name)]
+        return ', '.join(tools) if tools else 'none detected; use --no-snapshot to acknowledge'
+
+    add('non-root', non_root)
+    add('session-bus', lambda: 'session bus present' if os.environ.get('DBUS_SESSION_BUS_ADDRESS') else (_ for _ in ()).throw(RuntimeError('no session bus')))
+    add('os', os_check)
+    add('gnome', gnome_check, 'This profile targets GNOME Shell 50.x')
+    add('session', session_check)
+    for tool in ('gsettings', 'dconf', 'gnome-extensions', 'fc-match'):
+        add('tool:' + tool, lambda t=tool: shutil.which(t) or (_ for _ in ()).throw(RuntimeError(f'{t} not found')))
+    add('doctor', doctor_check)
+    add('settings', settings_check)
+    add('shell-theme', theme_check)
+    add('system-snapshot-tool', snapshot_tool)
+
+    enabled = set(_enabled_extensions())
+    for uuid, role in profile['extensions'].items():
+        def extension_check(u=uuid, r=role):
+            meta = _extension_meta(u)
+            if not meta:
+                raise RuntimeError(f'{u} is not installed')
+            if u not in enabled:
+                raise RuntimeError(f'{u} is not enabled')
+            return f"{meta.get('name', u)} {meta.get('version') or ''} ({r})".strip()
+        add('extension:' + uuid, extension_check)
+
+    for patch in profile['patches']:
+        add('patch:' + patch['name'], lambda c=patch['check']: _check_patch(c))
+    return checks
+
+
+def _bootstrap_plan(profile):
+    plan = {}
+    for module in profile['modules']:
+        changes = []
+        unavailable = []
+        for schema, path, key, target in SETTINGS.get(module, []):
+            try:
+                current = run(*gs(schema), 'get', schema, key)
+            except (RuntimeError, OSError):
+                unavailable.append(f'{schema}:{key}')
+                continue
+            if current != target:
+                changes.append(f'{schema}:{key} {current} -> {target}')
+        plan[module] = {'changes': len(changes), 'unavailable': len(unavailable)}
+        if changes:
+            print(f'PLAN {module}: ' + '; '.join(changes))
+        elif unavailable:
+            print(f'PLAN {module}: {len(unavailable)} setting(s) unavailable')
+        else:
+            print(f'PLAN {module}: already matches the profile')
+    return plan
+
+
+def _write_bootstrap_report(profile, checks, plan, backup, verification, rolled_back, ok, error=None):
+    BOOTSTRAP_REPORTS.mkdir(parents=True, exist_ok=True, mode=0o700)
+    stamp = dt.datetime.now(dt.timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+    path = BOOTSTRAP_REPORTS / (stamp + '-' + uuid.uuid4().hex[:8] + '.json')
+    rollback = None
+    if backup:
+        rollback = 'python3 desktop.py restore --from ' + str(backup) + ' ' + \
+                   ' '.join('--module ' + m for m in profile['modules']) + ' --execute'
+    data = {
+        'version': KIT_VERSION,
+        'created_utc': dt.datetime.now(dt.timezone.utc).isoformat(),
+        'profile': profile['name'],
+        'modules': profile['modules'],
+        'checks': checks,
+        'plan': plan,
+        'backup': str(backup) if backup else None,
+        'verification': verification,
+        'rolled_back': bool(rolled_back),
+        'rollback': rollback,
+        'ok': bool(ok),
+        'error': error,
+    }
+    text = json.dumps(data, ensure_ascii=False, indent=2) + '\n'
+    path.write_text(text)
+    os.chmod(path, 0o600)
+    return path
+
+
+def bootstrap(args):
+    profile = load_profile(args.profile)
+    if args.module:
+        raise RuntimeError('bootstrap uses the profile modules; do not pass --module')
+    if args.source:
+        raise RuntimeError('bootstrap does not accept --from')
+    if args.execute and not (args.snapshot_ok or args.no_snapshot):
+        raise RuntimeError('bootstrap --execute requires --snapshot-ok or --no-snapshot')
+    checks = _bootstrap_checks(profile)
+    for check in checks:
+        print(f"CHECK {check['name']}: {'OK' if check['ok'] else 'FAIL'} - {check['detail']}")
+    preflight_ok = all(c['ok'] for c in checks)
+    plan = _bootstrap_plan(profile)
+    if not args.execute:
+        print(f"BOOTSTRAP DRY-RUN: {'ready' if preflight_ok else 'not ready'} (profile {profile['name']})")
+        return 0 if preflight_ok else 1
+    if not preflight_ok:
+        raise RuntimeError('bootstrap preflight failed; no writes attempted')
+    if os.geteuid() == 0:
+        raise RuntimeError('Do not run as root or with sudo')
+    if os.environ.get('GSETTINGS_BACKEND') not in [None, 'dconf']:
+        raise RuntimeError('Only the dconf GSettings backend is supported')
+    if not os.environ.get('DBUS_SESSION_BUS_ADDRESS'):
+        raise RuntimeError('No session bus; no writes attempted')
+    with lock():
+        preflight(profile['modules'])
+        safety, prior = snapshot(profile['modules'])
+        verification = None
+        rolled_back = False
+        try:
+            for module in profile['modules']:
+                for schema, path, key, value in SETTINGS[module]:
+                    run(*gs(schema), 'set', schema, key, value)
+                    actual = run(*gs(schema), 'get', schema, key)
+                    if actual != value:
+                        raise RuntimeError(f'Read-back mismatch: {schema} {key}: {actual}')
+            verification = verify_report()
+            if not verification['ok']:
+                restore_data(safety, prior, profile['modules'])
+                rolled_back = True
+        except BaseException as exc:
+            print('bootstrap failed; restoring safety backup', file=sys.stderr)
+            try:
+                restore_data(safety, prior, profile['modules'])
+            except BaseException as restore_exc:
+                print('BOOTSTRAP ROLLBACK FAILED: ' + str(restore_exc), file=sys.stderr)
+            report_path = _write_bootstrap_report(profile, checks, plan, safety, verification,
+                                                  True, False, str(exc))
+            print('REPORT ' + str(report_path))
+            raise
+        success = bool(verification and verification['ok'] and not rolled_back)
+        report_path = _write_bootstrap_report(profile, checks, plan, safety, verification,
+                                              rolled_back, success)
+    print('BOOTSTRAP ' + ('DONE' if success else 'INCOMPLETE'))
+    print('BACKUP ' + str(safety))
+    print('REPORT ' + str(report_path))
+    if not success:
+        print('ROLLBACK: ' + ' '.join(['python3', 'desktop.py', 'restore', '--from', str(safety)] +
+                                      [x for m in profile['modules'] for x in ('--module', m)] + ['--execute']))
+    return 0 if success else 1
 
 
 @contextlib.contextmanager
@@ -577,13 +895,20 @@ def lock():
 def main():
     os.umask(0o077)
     p = argparse.ArgumentParser(description='默认只读。apply/restore 默认 dry-run；实际写入必须 --execute。')
-    p.add_argument('command', nargs='?', choices=['status', 'doctor', 'install', 'verify', 'apply', 'backup', 'restore'], default='status')
+    p.add_argument('command', nargs='?', choices=['status', 'doctor', 'install', 'verify', 'apply', 'backup', 'restore', 'bootstrap'], default='status')
     p.add_argument('--version', action='version', version=f'gnome50-macos-kit {KIT_VERSION}')
     p.add_argument('--module', action='append', help=', '.join(MODULES) + '; repeat option; backup supports all')
     p.add_argument('--from', dest='source', type=Path, help='Backup directory to restore')
+    p.add_argument('--profile', type=Path, default=DEFAULT_PROFILE,
+                   help='Bootstrap profile JSON (default: profiles/ubuntu-26.04-gnome-50.json)')
     mode = p.add_mutually_exclusive_group()
     mode.add_argument('--execute', action='store_true', help='Explicitly write selected modules after automatic backup')
     mode.add_argument('--dry-run', action='store_true', help='No files/settings changes, including no backup creation')
+    snap = p.add_mutually_exclusive_group()
+    snap.add_argument('--snapshot-ok', action='store_true',
+                      help='Bootstrap --execute: a system snapshot already exists')
+    snap.add_argument('--no-snapshot', action='store_true',
+                      help='Bootstrap --execute: proceed without a system snapshot (config backup is still created)')
     args = p.parse_args()
     if args.command == 'status':
         status()
@@ -592,6 +917,8 @@ def main():
         sys.exit(doctor())
     if args.command == 'verify':
         sys.exit(verify())
+    if args.command == 'bootstrap':
+        sys.exit(bootstrap(args))
     if args.command == 'install':
         modules = INSTALL_MODULES
     else:

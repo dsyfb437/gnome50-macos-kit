@@ -1,0 +1,50 @@
+{
+  "format": 1,
+  "name": "ubuntu-26.04-gnome-50",
+  "description": "Ubuntu 26.04.1 LTS + GNOME Shell 50.1, Wayland, WhiteSur/Dhruva/Orbit desktop. User-level bootstrap only: it never installs packages or applies source patches.",
+  "target": {
+    "os_id": "ubuntu",
+    "os_version": "26.04",
+    "gnome_prefix": "GNOME Shell 50.",
+    "session_types": ["wayland"],
+    "shell_theme": "WhiteSur-MacOS-33ce5241ece02d81"
+  },
+  "modules": [
+    "appearance",
+    "font",
+    "buttons",
+    "panel-blur",
+    "status-area",
+    "macos-dock",
+    "shell-theme"
+  ],
+  "extensions": {
+    "user-theme@gnome-shell-extensions.gcampax.github.com": "shell-theme",
+    "blur-my-shell@aunetx": "panel-blur, macos-dock",
+    "dhruva@narkagni": "macos-dock",
+    "global-menu@unmade.space": "status-area",
+    "just-perfection-desktop@just-perfection": "status-area",
+    "ubuntu-appindicators@ubuntu.com": "status-area",
+    "spotlight@nin": "search lifecycle patch"
+  },
+  "patches": [
+    {
+      "name": "spotlight-lifecycle",
+      "check": "spotlight"
+    },
+    {
+      "name": "global-menu-dedupe",
+      "check": "menu-dedupe"
+    },
+    {
+      "name": "global-menu-arrow-css",
+      "check": "menu-arrow-css"
+    }
+  ],
+  "packages": [
+    "gnome-shell",
+    "dconf-cli",
+    "gnome-shell-extensions",
+    "fonts-inter"
+  ]
+}

@@ -254,5 +254,42 @@ class DesktopTests(unittest.TestCase):
         self.assertTrue(any(c.get('hint') for c in report['checks'] if not c['ok']))
         self.assertEqual(before, after, 'doctor must not create state files')
 
+    def test_21_bootstrap_dry_run_is_readonly(self):
+        before = sorted(str(x) for x in STATE.rglob('*')) if STATE.exists() else None
+        p = call('bootstrap', '--dry-run', ok=False)
+        after = sorted(str(x) for x in STATE.rglob('*')) if STATE.exists() else None
+        # The isolated HOME has no WhiteSur/Inter/extensions, so preflight is not ready.
+        self.assertNotEqual(p.returncode, 0)
+        self.assertIn('CHECK doctor:', p.stdout)
+        self.assertIn('BOOTSTRAP DRY-RUN: not ready', p.stdout)
+        self.assertEqual(before, after, 'bootstrap dry-run must not create state files')
+
+    def test_22_bootstrap_execute_requires_snapshot_ack(self):
+        before = sorted(str(x) for x in STATE.rglob('*')) if STATE.exists() else None
+        p = call('bootstrap', '--execute', ok=False)
+        after = sorted(str(x) for x in STATE.rglob('*')) if STATE.exists() else None
+        self.assertNotEqual(p.returncode, 0)
+        self.assertIn('snapshot', p.stderr.lower())
+        self.assertEqual(before, after, 'refusal must happen before any write')
+
+    def test_23_bootstrap_rejects_bad_profile(self):
+        profile = HOME / 'bad-profile.json'
+        profile.write_text(json.dumps({
+            'format': 1,
+            'name': 'bad',
+            'target': {'os_id': 'ubuntu', 'os_version': '26.04',
+                       'gnome_prefix': 'GNOME Shell 50.', 'session_types': ['wayland'],
+                       'shell_theme': 'WhiteSur-MacOS-test'},
+            'modules': ['not-a-module'],
+            'extensions': {'x': 'y'},
+        }))
+        before = sorted(str(x) for x in STATE.rglob('*')) if STATE.exists() else None
+        p = call('bootstrap', '--dry-run', '--profile', str(profile), ok=False)
+        after = sorted(str(x) for x in STATE.rglob('*')) if STATE.exists() else None
+        self.assertNotEqual(p.returncode, 0)
+        self.assertIn('modules', p.stderr)
+        self.assertEqual(before, after)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
