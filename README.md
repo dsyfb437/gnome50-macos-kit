@@ -189,14 +189,16 @@ tests/                      隔离测试
 - 主题只能统一颜色、圆角、阴影和部分布局，不能把 GTK/AppKit 应用生态变成 macOS；完整 macOS 控制中心需要自定义 Shell 扩展，不在本仓库范围。
 - 部分应用菜单仍可能是英文，取决于 curated JSON 覆盖。
 
-## 发布
+## 打包（可选）
+
+仓库本身就是源码，不需要 GitHub Release；直接 `git clone` 或下载源码 ZIP，然后 `./install.sh` 即可。只有离线拷贝或校验时才本地打包：
 
 ```bash
 tools/build-release.sh
-# dist/gnome50-macos-kit-1.5.0.tar.gz 和 .sha256
+# dist/gnome50-macos-kit-1.5.0.tar.gz + .sha256
 ```
 
-发布包从已提交代码构建，不含 `.git`、缓存或私人文件。GitHub Releases 提供 tar.gz 和 sha256。
+包从已提交代码构建，不含 `.git`、缓存或私人文件。
 
 ## License
 

@@ -10,7 +10,7 @@ ad24df69877e7ee3b0671c9f790766c1c1238bd80ee8361e8ad619568f428585  ./patches/gtk4
 2d54482e7cdd9cadb1e302483d4924ead29f1ccc3448e274f83e3b580a3bea81  ./patches/spotlight-stage-parking.patch
 5ceece3e518f59d6e6ae99dd691821fa24034c29fbdacaa179ad158905e84fee  ./profiles/README.md
 31464f0178b4d14c61a92bd1e664decfabe104d0f15a2fd40c2cb71987e6daf6  ./profiles/ubuntu-26.04-gnome-50.json
-f9c29f5749cc4b66e58dec6ef831fce4662dd2841670a55506998f2312443630  ./README.md
+d7d0832c2720e269cc30f8b844021995baf49ba93a10146168adb3ef168f8447  ./README.md
 4c1b996dd613ad1a6ffbef54a0c9b48dee098dd6f4b3c2e3df3ff1e21a194b32  ./sources.py
 bbba86beb94b8b9fe03e825dd8a6492d3e6af80dcd69883c3a4f64d421ad3a5c  ./style.py
 8bcd366e515a9cd3420d0d97c61c8de00c4bb967e8098e6a287cd4a1f821c2ac  ./styles/panel-light.css
