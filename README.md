@@ -159,4 +159,4 @@ tools/              菜单本地化、登录诊断、本地打包（可选）
 
 ## License
 
-MIT，见 [LICENSE](LICENSE)。
+MIT，见 [LICENSE](LICENSE)。上游 WhiteSur、Dhruva、Orbit 等项目保留各自许可证；本仓库不打包其资源。
