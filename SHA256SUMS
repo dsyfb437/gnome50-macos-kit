@@ -1,7 +1,7 @@
 565ab9294f45245793340629b73fb3bec2c0f8f3b1492353e2d932fa290641d8  ./data/menu-zh.json
 7e15636c9ee7eb6ce2e245aec427019b771e41dac22944b53f15c9517c2cbce8  ./data/spotlight-patch-manifest.json
 8effa5742eb83c619d36ac179591cc072dbc3737ae15e8e4eaa4a0c5a00a00be  ./desktop.py
-6a48fdb9cd8d8e8d0362402c44f8898c8ba9823ba83c594cb06ff76ec9a23573  ./.github/workflows/checks.yml
+d4005f95b1e017100b7251bb11a519caf461012ba130e515ebb100bfcd42c691  ./.github/workflows/checks.yml
 734ab1e783b12b7dc4a98560051ea6411f238e6760afaa2aee88d549f1e43e0d  ./.gitignore
 2f7d8225b0b9a81e3f16aa3f16a9a39891bb23e4c05c8d67033feec465cf7bea  ./install.sh
 d86089768fb3af35b05aac4f2a8b5e5313ef16da3f2081b94b38b640c2d94b43  ./LICENSE
@@ -10,7 +10,7 @@ a6010de897e9a18c7f18d18301079d18acb4ca44234801cd88402e4d80991e1e  ./patches/glob
 ad24df69877e7ee3b0671c9f790766c1c1238bd80ee8361e8ad619568f428585  ./patches/gtk4-whitesur-light-candidate.patch
 2d54482e7cdd9cadb1e302483d4924ead29f1ccc3448e274f83e3b580a3bea81  ./patches/spotlight-stage-parking.patch
 c3ef00f8f7ee0555fdf6a4786d7c4dadd06e1c491ea7dd3fe491a9ceb290c995  ./profiles/ubuntu-26.04-gnome-50.json
-9a89806f0598a3dc32b33c20dd23492f3a9808234fe0641a4731d35d0632977d  ./README.md
+4365baf8ceaf1b6f5475b1124d4b3ea029206b983c2d415c1c549601bf36330c  ./README.md
 4c1b996dd613ad1a6ffbef54a0c9b48dee098dd6f4b3c2e3df3ff1e21a194b32  ./sources.py
 c70b41f742cbdae9d388a3d7c4d994ee7015303d5f6820d5dfac6db2f206b3d9  ./style.py
 8bcd366e515a9cd3420d0d97c61c8de00c4bb967e8098e6a287cd4a1f821c2ac  ./styles/panel-light.css

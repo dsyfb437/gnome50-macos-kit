@@ -161,6 +161,8 @@ python3 tests/test_style.py        # 6 项主题生成工具测试
 tests/run-extension-tests.sh       # 可选：对已安装的 global-menu/Spotlight 源码跑集成测试
 ```
 
+CI（`.github/workflows/checks.yml`）跑 Python 语法、主题测试和扩展集成测试；扩展源码不存在时自动跳过。24 项桌面测试需要本地 GNOME 会话，因此不在 CI 中伪装运行。
+
 `verify` 检查会话总线、GNOME 50、配置目标、必需扩展、生成主题、Spotlight 补丁、菜单去重补丁，以及 Ptyxis / VS Code 启动项是否仍导出 `GTK_THEME`。
 
 ## 目录
