@@ -1,3 +1,4 @@
+bd3252b831b3444afe9c8ef6458e4ab86e2e68549eec2406cb95d96c44567009  ./assets/desktop-preview-v2.webp
 565ab9294f45245793340629b73fb3bec2c0f8f3b1492353e2d932fa290641d8  ./data/menu-zh.json
 7e15636c9ee7eb6ce2e245aec427019b771e41dac22944b53f15c9517c2cbce8  ./data/spotlight-patch-manifest.json
 8effa5742eb83c619d36ac179591cc072dbc3737ae15e8e4eaa4a0c5a00a00be  ./desktop.py
@@ -10,7 +11,7 @@ a6010de897e9a18c7f18d18301079d18acb4ca44234801cd88402e4d80991e1e  ./patches/glob
 ad24df69877e7ee3b0671c9f790766c1c1238bd80ee8361e8ad619568f428585  ./patches/gtk4-whitesur-light-candidate.patch
 2d54482e7cdd9cadb1e302483d4924ead29f1ccc3448e274f83e3b580a3bea81  ./patches/spotlight-stage-parking.patch
 c3ef00f8f7ee0555fdf6a4786d7c4dadd06e1c491ea7dd3fe491a9ceb290c995  ./profiles/ubuntu-26.04-gnome-50.json
-4365baf8ceaf1b6f5475b1124d4b3ea029206b983c2d415c1c549601bf36330c  ./README.md
+db553f9e9df5543193085965d5ca0d72763a67c5ca1ebb38bb2fa647f1b3b40b  ./README.md
 4c1b996dd613ad1a6ffbef54a0c9b48dee098dd6f4b3c2e3df3ff1e21a194b32  ./sources.py
 c70b41f742cbdae9d388a3d7c4d994ee7015303d5f6820d5dfac6db2f206b3d9  ./style.py
 8bcd366e515a9cd3420d0d97c61c8de00c4bb967e8098e6a287cd4a1f821c2ac  ./styles/panel-light.css

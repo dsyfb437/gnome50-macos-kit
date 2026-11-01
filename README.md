@@ -8,6 +8,12 @@ Ubuntu 26.04.1 / GNOME Shell 50.1 的 macOS 风格桌面 bootstrap。只面向**
 
 A scoped, reviewable bootstrap for a macOS-style Ubuntu 26.04 / GNOME Shell 50.1 desktop. It assumes WhiteSur, Dhruva and Orbit are already installed; it is not a universal one-click macOS installer.
 
+## 演示
+
+![Desktop preview](assets/desktop-preview-v2.webp)
+
+> 截图：Text Editor、Files、Terminal；Chrome 不在画面内。桌面使用 WhiteSur + Dhruva + Orbit。
+
 ## 一键入口
 
 ```bash
@@ -168,6 +174,7 @@ CI（`.github/workflows/checks.yml`）跑 Python 语法、主题测试和扩展�
 ## 目录
 
 ```text
+assets/desktop-preview-v2.webp  README 演示图（脱敏）
 install.sh                  一键入口（薄包装；运行时）
 desktop.py                  核心：状态/doctor/install/apply/verify/backup/restore/bootstrap（运行时）
 style.py, styles/           生成 WhiteSur-MacOS-Kit Shell 变体；styles/panel-light.css 是唯一的主题覆盖源
