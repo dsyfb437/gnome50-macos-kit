@@ -13,7 +13,7 @@ root = Path(__file__).resolve().parent
 p = argparse.ArgumentParser(description='默认只检查 Spotlight 补丁与新会话；--exercise 明确执行 5 轮概览开关')
 p.add_argument('--exercise', action='store_true')
 a = p.parse_args()
-manifest = json.loads((root / 'evidence/completion-additions.json').read_text())['spotlight']
+manifest = json.loads((root / 'data/spotlight-patch-manifest.json').read_text())
 patch_time = dt.datetime.fromisoformat(manifest['applied_at']).timestamp()
 ids = subprocess.check_output(['pgrep', '-u', str(os.getuid()), '-x', 'gnome-shell'], text=True).split()
 boot = int(next(x.split()[1] for x in Path('/proc/stat').read_text().splitlines() if x.startswith('btime ')))

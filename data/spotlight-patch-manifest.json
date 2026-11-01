@@ -1,0 +1,22 @@
+{
+  "uuid": "spotlight@nin",
+  "version": "2026.15",
+  "files": {
+    "lib/overview/searchStealer.js": {
+      "original_sha256": "c515cd21e2646154dee9d4660da5f1c48684cded958a5c52b012d108b7a17be8",
+      "patched_sha256": "62a7a3f293b6ffd1ea0ba481be8df71110521f12d4452e71c035216685138b66"
+    },
+    "lib/popup/widget/spotlightPopup.js": {
+      "original_sha256": "148cde2d7118b9fe3941cc97390e7ce853513958104bbf85529ed863bed149af",
+      "patched_sha256": "8e2ef10b1c4e8b6b72635c8f2b2ae57048bc45cbb1600f04636002a5fca14f92"
+    },
+    "extension.js": {
+      "original_sha256": "0254bae8112374c9f488cf6c6fe8e6328732a189f11db9f3bb918835b246458d",
+      "patched_sha256": "f94d4270484ec95850775bf4fc081b4b9e582e063fd489b117698244db51d5d2"
+    }
+  },
+  "runtime_activation": "Requires a new GNOME login because extension modules are cached",
+  "backup": "~/.local/state/gnome50-macos-kit/manual-backups/20261028-155646-spotlight",
+  "applied_at": "2026-10-28T15:56:46.408943+08:00",
+  "status": "Installed on disk; currently loaded original extension stays ACTIVE until next login"
+}
