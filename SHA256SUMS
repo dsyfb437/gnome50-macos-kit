@@ -11,7 +11,9 @@ a6010de897e9a18c7f18d18301079d18acb4ca44234801cd88402e4d80991e1e  ./patches/glob
 ad24df69877e7ee3b0671c9f790766c1c1238bd80ee8361e8ad619568f428585  ./patches/gtk4-whitesur-light-candidate.patch
 2d54482e7cdd9cadb1e302483d4924ead29f1ccc3448e274f83e3b580a3bea81  ./patches/spotlight-stage-parking.patch
 c3ef00f8f7ee0555fdf6a4786d7c4dadd06e1c491ea7dd3fe491a9ceb290c995  ./profiles/ubuntu-26.04-gnome-50.json
-61ec44e17b8cedd1e0f731abf8d98c57d7dba025247a10314a07c56ace9f72a5  ./README.md
+0b79826f771700ad4db07cf99abf4ab24a86ed1ee8681f64540304019402cba3  ./__pycache__/desktop.cpython-314.pyc
+7e702d98a8b81674d70f6344f77fa5b16cf523693fc20692f3d46626751d1eef  ./__pycache__/style.cpython-314.pyc
+66ef01dcd1a3362185c31bd8409c2efb08f9ea923d3f5aae2316eb0393634dd3  ./README.md
 4c1b996dd613ad1a6ffbef54a0c9b48dee098dd6f4b3c2e3df3ff1e21a194b32  ./sources.py
 c70b41f742cbdae9d388a3d7c4d994ee7015303d5f6820d5dfac6db2f206b3d9  ./style.py
 8bcd366e515a9cd3420d0d97c61c8de00c4bb967e8098e6a287cd4a1f821c2ac  ./styles/panel-light.css

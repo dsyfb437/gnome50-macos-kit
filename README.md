@@ -2,9 +2,8 @@
 
 在 Ubuntu 26.04 / GNOME Shell 50.1 上复现 macOS 风格桌面配置的 bootstrap。
 
-它只负责用户级配置：把现有桌面的 GTK、Shell、Dock、顶栏、字体和窗口按钮统一成一套可回滚的配置，不安装主题或扩展。
+它只负责用户级配置：把现有桌面的 GTK、Shell、Dock、顶栏、字体和窗口按钮统一成一套可回滚的配置，不负责安装上游主题、扩展或系统包。
 
-[![checks](https://github.com/dsyfb437/gnome50-macos-kit/actions/workflows/checks.yml/badge.svg)](https://github.com/dsyfb437/gnome50-macos-kit/actions/workflows/checks.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![version](https://img.shields.io/badge/version-1.5.0-informational)
 
@@ -22,13 +21,15 @@
 - Python 3.10+、`gsettings`、`dconf`、`gnome-extensions`、`fc-match`；
 - 以普通用户运行，不要用 sudo。
 
-先检查环境：
+先获取代码并检查环境：
 
 ```bash
+git clone https://github.com/dsyfb437/gnome50-macos-kit.git
+cd gnome50-macos-kit
 python3 desktop.py doctor
 ```
 
-`doctor` 只读，按主题、图标、字体、扩展、schema 和生成主题列出缺失项。
+`doctor` 只读，按主题、图标、字体、扩展、schema 和生成主题列出缺失项；缺生成主题/补丁时按下一节处理，改完再跑一次。
 
 ## 需要手工准备
 
@@ -67,14 +68,27 @@ gnome-extensions enable global-menu@unmade.space
 
 只改 global-menu 的 curated JSON，不改应用本身；恢复用脚本留下的 `.bak-*`。
 
+## 它会改什么
+
+| 模块 | 内容 |
+| --- | --- |
+| `appearance` | WhiteSur Light GTK/图标/光标、prefer-light |
+| `font` | Inter 11 |
+| `buttons` | 窗口按钮左置（close/minimize/maximize） |
+| `panel-blur` | 顶栏模糊开、概览模糊关 |
+| `status-area` | 托盘灰度、全局菜单字号 11、面板指示器间距 6 |
+| `macos-dock` | Dhruva 浅色半透明 Dock、关闭实时模糊 |
+| `shell-theme` | 选中生成的 `WhiteSur-MacOS-Kit` Shell 主题 |
+
+默认 profile 是 `profiles/ubuntu-26.04-gnome-50.json`。其他环境复制一份，修改 `target`、`modules`、`extensions`、`patches` 后先跑 `--dry-run`。
+
+`apply` 单独应用模块，`install` 按固定顺序应用全部；两者默认 dry-run。实际执行依次经过 preflight、plan、apply、verify，并生成报告；失败会自动恢复本次配置备份。
+
 ## 快速开始
 
 完成手工准备后：
 
 ```bash
-git clone https://github.com/dsyfb437/gnome50-macos-kit.git
-cd gnome50-macos-kit
-
 ./install.sh --dry-run
 
 # 已有系统快照
@@ -91,20 +105,6 @@ cd gnome50-macos-kit
 ```
 
 `--snapshot-ok` 只是声明系统快照已存在；`--no-snapshot` 表示接受没有系统级回滚。
-
-## 它会改什么
-
-| 模块 | 内容 |
-| --- | --- |
-| `appearance` | WhiteSur Light GTK/图标/光标、prefer-light |
-| `font` | Inter 11 |
-| `buttons` | 窗口按钮左置（close/minimize/maximize） |
-| `panel-blur` | 顶栏模糊开、概览模糊关 |
-| `status-area` | 托盘灰度、全局菜单字号 11、面板指示器间距 6 |
-| `macos-dock` | Dhruva 浅色半透明 Dock、关闭实时模糊 |
-| `shell-theme` | 选中生成的 `WhiteSur-MacOS-Kit` Shell 主题 |
-
-`apply` 单独应用模块，`install` 按固定顺序应用全部；两者默认 dry-run。实际执行由 preflight、plan、apply、verify 组成，失败会自动恢复本次配置备份。
 
 ## 回滚
 
@@ -154,9 +154,8 @@ style.py, styles/   生成 WhiteSur-MacOS-Kit
 profiles/           限定环境的 profile
 patches/            手工应用的源码补丁
 tests/              隔离测试与 profile 契约检查
+tools/              菜单本地化、登录诊断、本地打包（可选）
 ```
-
-无需 Release：源码即发布，直接 clone 即可。需要离线包时运行 `tools/build-release.sh`。
 
 ## License
 
