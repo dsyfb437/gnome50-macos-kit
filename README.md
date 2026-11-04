@@ -4,6 +4,8 @@
 
 它只负责用户级配置：把现有桌面的 GTK、Shell、Dock、顶栏、字体和窗口按钮统一成一套可回滚的配置，不负责安装上游主题、扩展或系统包。
 
+> **维护状态**：维护者目前使用 Ubuntu 默认桌面。macOS 风格方案在实际使用中存在性能问题，本仓库作为参考实现保留。
+
 [![checks](https://github.com/dsyfb437/gnome50-macos-kit/actions/workflows/checks.yml/badge.svg)](https://github.com/dsyfb437/gnome50-macos-kit/actions/workflows/checks.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![version](https://img.shields.io/badge/version-1.5.0-informational)
